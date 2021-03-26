@@ -13,14 +13,17 @@
             <v-text-field
               v-model="pass"
               :type="showPassword ? 'text' : 'password'"
+              hide-details="auto"
+              autocomplete="off"
               label="Password"
-              autocomplete="off"
             />
-            <v-checkbox
-              v-model="showPassword"
-              :label="'Show password'"
+            <v-text-field
+              v-model="cpass"
+              :type="showPassword ? 'text' : 'password'"
               autocomplete="off"
+              label="Confirm Password"
             />
+            <v-checkbox v-model="showPassword" :label="'Show password'" />
             <div v-if="error" class="text-center my-8" @click="error = !error">
               Error: {{ message }}
             </div>
@@ -35,14 +38,14 @@
                 :disabled="loading"
                 @click="login"
               >
-                Login
+                Register
               </v-btn>
               <v-spacer />
             </v-card-actions>
           </v-form>
           <div class="text-center mt-8">
-            Do not have have an account?
-            <NuxtLink to="/register">Create new account</NuxtLink>
+            Already have have an account?
+            <NuxtLink to="/login">Login</NuxtLink>
           </div>
         </v-card-text>
       </v-card>
@@ -69,6 +72,7 @@ export default {
   data: () => ({
     email: '',
     pass: '',
+    cpass: '',
     message: '',
     error: false,
     loading: false,
@@ -76,7 +80,7 @@ export default {
     loaded: false,
   }),
   head: () => ({
-    title: 'Login',
+    title: 'Register',
   }),
   async created() {
     await this.$fire.authReady()
@@ -84,13 +88,9 @@ export default {
     this.$fire.auth.onAuthStateChanged((user) => {
       if (user) {
         this.$store.commit('user', user)
-        if (this.$router.currentRoute.query.redirect) {
-          this.$router.push(this.$router.currentRoute.query.redirect)
-        } else {
-          this.$router.push({ name: 'index' })
-        }
+        this.$router.push({ name: 'index' })
       } else {
-        this.$store.commit('title', 'Login')
+        this.$store.commit('title', 'Register')
         this.loaded = true
       }
     })
@@ -99,19 +99,24 @@ export default {
     login() {
       this.message = ''
       this.error = false
-      this.loading = true
-      this.$fire.auth
-        .signInWithEmailAndPassword(this.email, this.pass)
-        .then((user) => {
-          this.$store.commit('user', user)
-        })
-        .catch((error) => {
-          this.error = true
-          this.message = error.message
-        })
-        .finally(() => {
-          this.loading = false
-        })
+      if (this.pass === this.cpass) {
+        this.loading = true
+        this.$fire.auth
+          .createUserWithEmailAndPassword(this.email, this.pass)
+          .then((user) => {
+            this.$store.commit('user', user)
+          })
+          .catch((error) => {
+            this.error = true
+            this.message = error.message
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } else {
+        this.message = "Password doesn't match"
+        this.error = true
+      }
     },
   },
 }

@@ -3,8 +3,6 @@ export default {
     title: process.env.VUE_APP_TITLE || 'School App',
   },
   privateRuntimeConfig: {},
-
-  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s | ' + (process.env.VUE_APP_TITLE || 'School App'),
     title: 'phschool',
@@ -15,49 +13,32 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
+  plugins: ['~/plugins/firebase.js'],
   components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
-  ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
-    '@nuxtjs/firebase',
-  ],
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/pwa', '@nuxtjs/firebase'],
   axios: {},
-
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
       lang: 'en',
     },
   },
-
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {},
   },
-
+  env: {
+    VUE_APP_FIREBASE_APIKEY: process.env.VUE_APP_FIREBASE_APIKEY,
+    VUE_APP_FIREBASE_AUTHDOMAIN: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
+    VUE_APP_FIREBASE_DATABASEURL: process.env.VUE_APP_FIREBASE_DATABASEURL,
+    VUE_APP_FIREBASE_PROJECTID: process.env.VUE_APP_FIREBASE_PROJECTID,
+    VUE_APP_FIREBASE_STORAGEBUCKET: process.env.VUE_APP_FIREBASE_STORAGEBUCKET,
+    VUE_APP_FIREBASE_MESSAGINGSENDERID:
+      process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
+    VUE_APP_FIREBASE_APPID: process.env.VUE_APP_FIREBASE_APPID,
+    VUE_APP_FIREBASE_MEASUREMENTID: process.env.VUE_APP_FIREBASE_MEASUREMENTID,
+  },
   firebase: {
     config: {
       apiKey: process.env.VUE_APP_FIREBASE_APIKEY,
@@ -70,11 +51,25 @@ export default {
       measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENTID,
     },
     services: {
-      auth: true, // Just as example. Can be any other service.
+      auth: true,
+      firestore: true,
+      storage: true,
     },
     lazy: true,
   },
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
+  auth: {
+    persistence: 'local', // default
+    initialize: {
+      onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+      onAuthStateChangedAction: 'onAuthStateChangedAction',
+      subscribeManually: false,
+    },
+    ssr: {
+      credential: true,
+      serverLogin: true,
+    },
+    // emulatorPort: 9099,
+    // emulatorHost: 'http://localhost',
+  },
   build: {},
 }

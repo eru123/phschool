@@ -1,36 +1,43 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/"> Home page </NuxtLink>
+  <v-app>
+    <div class="text-center">
+      <h1 class="h1 py-8">
+        {{ per }}
+      </h1>
+    </div>
+    <div class="text-center py-8">
+      <NuxtLink to="/"> Back to Home</NuxtLink>
+    </div>
   </v-app>
 </template>
 
 <script>
+const xcode = {
+  404: '404 Page Not Found',
+}
+
+const dcode = 'Unknown Error Occur'
+
 export default {
-  layout: 'empty',
+  layout: 'plain',
   props: {
     error: {
       type: Object,
       default: null,
     },
   },
-  data() {
-    return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred',
-    }
-  },
+  data: () => ({
+    per: '',
+  }),
   head() {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = xcode[this.error.statusCode] ?? dcode
     return {
       title,
     }
+  },
+  created() {
+    this.$store.commit('title', 'Error')
+    this.per = xcode[this.error.statusCode] ?? dcode
   },
 }
 </script>

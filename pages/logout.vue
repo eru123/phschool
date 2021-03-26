@@ -39,10 +39,9 @@
   </v-row>
 </template>
 <script>
+import Cookies from 'js-cookie'
 export default {
-  layout(context) {
-    return 'plain'
-  },
+  middleware: ['auth-only'],
   data: () => ({
     message: '',
     error: false,
@@ -52,13 +51,15 @@ export default {
     title: 'Logout',
   }),
   async created() {
+    this.$store.commit('title', 'Logout')
     await this.$fire.authReady()
-    if (!this.$fire.auth.currentUser) {
-      this.$router.push({ name: 'login' })
-    }
-
     this.$fire.auth.onAuthStateChanged((user) => {
       if (!user) {
+        this.$store.commit('user', {
+          uid: null,
+          email: null,
+          emailVerified: null,
+        })
         this.$router.push({ name: 'login' })
       }
     })
@@ -68,12 +69,15 @@ export default {
       this.message = ''
       this.error = false
       this.loading = true
-
-      await this.$fire.authReady()
       await this.$fire.auth
         .signOut()
         .then(() => {
-          this.$router.push({ name: 'login' })
+          this.$store.commit('user', {
+            uid: null,
+            email: null,
+            emailVerified: null,
+          })
+          Cookies.remove('access_token')
         })
         .catch((error) => {
           this.error = true
