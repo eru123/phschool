@@ -19,6 +19,7 @@
 </template>
 <script>
 export default {
+  middleware: ['auth-only'],
   head: () => ({
     title: 'Classes',
   }),

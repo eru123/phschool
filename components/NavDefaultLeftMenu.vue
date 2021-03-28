@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-list v-if="user.emailVerified" dense rounded>
+    <v-list dense rounded>
       <v-list-item to="/" router exact>
         <v-list-item-action>
-          <v-icon>mdi-apps</v-icon>
+          <v-icon>mdi-home</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>Dashboard</v-list-item-title>
+          <v-list-item-title>Homepage</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item to="/classes" router exact>
+      <v-list-item v-if="user.emailVerified" to="/classes" router exact>
         <v-list-item-action>
           <v-icon>mdi-account-group</v-icon>
         </v-list-item-action>

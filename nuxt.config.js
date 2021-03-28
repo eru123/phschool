@@ -51,25 +51,31 @@ export default {
       measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENTID,
     },
     services: {
-      auth: true,
-      firestore: true,
+      auth: {
+        persistence: 'local', // default
+        initialize: {
+          onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+          onAuthStateChangedAction: 'onAuthStateChangedAction',
+          subscribeManually: false,
+        },
+        ssr: {
+          credential: true,
+          serverLogin: true,
+        },
+        emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
+        emulatorHost:
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost'
+            : undefined,
+      },
+      firestore: {
+        emulatorPort: process.env.NODE_ENV === 'development' ? 8040 : undefined,
+        emulatorHost:
+          process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
+      },
       storage: true,
     },
     lazy: true,
-  },
-  auth: {
-    persistence: 'local', // default
-    initialize: {
-      onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
-      onAuthStateChangedAction: 'onAuthStateChangedAction',
-      subscribeManually: false,
-    },
-    ssr: {
-      credential: true,
-      serverLogin: true,
-    },
-    // emulatorPort: 9099,
-    // emulatorHost: 'http://localhost',
   },
   build: {},
 }

@@ -8,6 +8,11 @@ export const state = () => ({
     emailVerified: null,
   },
   loaded: false,
+  userdata: {
+    uid: null,
+    name: null,
+    defaultPhoto: null,
+  },
 })
 
 export const mutations = {
@@ -24,5 +29,30 @@ export const mutations = {
   },
   loaded(state, value) {
     state.loaded = Boolean(value)
+  },
+  userdata(state, value) {
+    state.userdata = Object(value)
+  },
+}
+
+export const actions = {
+  resetStoreState({ commit }) {
+    const defaultState = {
+      title: 'Every Juan',
+      user: {
+        uid: null,
+        email: null,
+        emailVerified: null,
+      },
+      loaded: false,
+      userdata: {
+        uid: null,
+        name: null,
+        defaultPhoto: null,
+      },
+    }
+
+    commit('user', defaultState.user)
+    commit('userdata', defaultState.userdata)
   },
 }

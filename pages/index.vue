@@ -3,28 +3,27 @@
     <v-row v-if="loaded && user.email" justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
         <EmailVerification v-if="!user.emailVerified" />
+        <ChangeName
+          v-if="loaded && user.emailVerified && userdata.uid && !userdata.name"
+        />
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card v-if="!loaded" outlined elevation="0" class="my-4">
-          <v-skeleton-loader type="article, actions"> </v-skeleton-loader>
-        </v-card>
-        <v-card v-if="!loaded" outlined elevation="0" class="my-4">
-          <v-skeleton-loader
-            type="table-heading, list-item-two-line, image, table-tfoot"
-          >
-          </v-skeleton-loader>
-        </v-card>
+        <SkeletonLoader />
       </v-col>
     </v-row>
   </div>
 </template>
 <script>
 import EmailVerification from '~/components/CardEmailVerification.vue'
+import ChangeName from '~/components/CardChangeName.vue'
+import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
     EmailVerification,
+    ChangeName,
+    SkeletonLoader,
   },
   head: () => ({
     title: 'Home',
@@ -35,6 +34,9 @@ export default {
     },
     loaded() {
       return this.$store.state.loaded
+    },
+    userdata() {
+      return this.$store.state.userdata
     },
   },
   created() {

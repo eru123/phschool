@@ -72,11 +72,7 @@ export default {
       await this.$fire.auth
         .signOut()
         .then(() => {
-          this.$store.commit('user', {
-            uid: null,
-            email: null,
-            emailVerified: null,
-          })
+          this.$store.dispatch('resetStoreState')
           Cookies.remove('access_token')
         })
         .catch((error) => {

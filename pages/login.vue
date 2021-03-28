@@ -21,9 +21,15 @@
               :label="'Show password'"
               autocomplete="off"
             />
-            <div v-if="error" class="text-center my-8" @click="error = !error">
-              Error: {{ message }}
-            </div>
+            <v-card
+              v-if="error"
+              color="red"
+              class="text-center my-4"
+              dark
+              elevation="0"
+            >
+              <v-card-text> Error: {{ message }} </v-card-text>
+            </v-card>
             <v-card-actions>
               <v-spacer />
               <v-btn
@@ -43,6 +49,10 @@
           <div class="text-center mt-8">
             Do not have have an account?
             <NuxtLink to="/register">Create new account</NuxtLink>
+          </div>
+          <div class="text-center mt-8">
+            or back to
+            <NuxtLink to="/">Home</NuxtLink>
           </div>
         </v-card-text>
       </v-card>
@@ -96,11 +106,12 @@ export default {
     })
   },
   methods: {
-    login() {
+    async login() {
       this.message = ''
       this.error = false
       this.loading = true
-      this.$fire.auth
+      await this.$fire.authReady()
+      await this.$fire.auth
         .signInWithEmailAndPassword(this.email, this.pass)
         .then((user) => {
           this.$store.commit('user', user)

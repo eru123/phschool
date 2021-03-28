@@ -1,12 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-if="loaded && user.email"
-      v-model="drawer"
-      clipped
-      app
-      fixed
-    >
+    <v-navigation-drawer v-if="loaded" v-model="drawer" clipped app fixed>
       <LeftMenu />
     </v-navigation-drawer>
     <v-app-bar
@@ -59,6 +53,7 @@
 <script>
 import RightMenu from '~/components/NavDefaultRightMenu.vue'
 import LeftMenu from '~/components/NavDefaultLeftMenu.vue'
+
 export default {
   components: {
     RightMenu,
@@ -69,23 +64,6 @@ export default {
       clipped: false,
       drawer: null,
       fixed: false,
-      accountItems: [
-        {
-          icon: 'mdi-account-edit',
-          title: 'Account',
-          to: '/account',
-        },
-        {
-          icon: 'mdi-cog',
-          title: 'Preference',
-          to: '/preference',
-        },
-        {
-          icon: 'mdi-logout',
-          title: 'Logout',
-          to: '/logout',
-        },
-      ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
@@ -101,6 +79,9 @@ export default {
     loaded() {
       return this.$store.state.loaded
     },
+    userdata() {
+      return this.$store.state.userdata
+    },
   },
   async created() {
     this.$store.commit('loaded', false)
@@ -108,6 +89,7 @@ export default {
     this.$fire.auth.onAuthStateChanged((user) => {
       if (user) {
         this.$store.commit('user', user)
+        this.getUserData()
       } else {
         this.$store.commit('user', {
           uid: null,
@@ -117,6 +99,22 @@ export default {
       }
       this.$store.commit('loaded', true)
     })
+  },
+  methods: {
+    async getUserData() {
+      await this.$fire.firestoreReady()
+      const docRef = this.$fire.firestore.collection('users').doc(this.user.uid)
+      const doc = await docRef.get()
+      const data = this.userdata
+      data.uid = this.user.uid
+      if (!doc.exists) {
+        await docRef.set(data).then(() => {
+          this.$store.commit('userdata', data)
+        })
+      } else {
+        this.$store.commit('userdata', doc.data())
+      }
+    },
   },
 }
 </script>

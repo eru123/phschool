@@ -204,3 +204,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Generated Script for Firebase Emulator
+static/firebase-auth-sw.js

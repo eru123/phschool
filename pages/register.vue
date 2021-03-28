@@ -24,9 +24,15 @@
               label="Confirm Password"
             />
             <v-checkbox v-model="showPassword" :label="'Show password'" />
-            <div v-if="error" class="text-center my-8" @click="error = !error">
-              Error: {{ message }}
-            </div>
+            <v-card
+              v-if="error"
+              color="red"
+              dark
+              class="text-center my-8"
+              elevation="0"
+            >
+              <v-card-text> Error: {{ message }} </v-card-text>
+            </v-card>
             <v-card-actions>
               <v-spacer />
               <v-btn
@@ -46,6 +52,10 @@
           <div class="text-center mt-8">
             Already have have an account?
             <NuxtLink to="/login">Login</NuxtLink>
+          </div>
+          <div class="text-center mt-8">
+            or back to
+            <NuxtLink to="/">Home</NuxtLink>
           </div>
         </v-card-text>
       </v-card>

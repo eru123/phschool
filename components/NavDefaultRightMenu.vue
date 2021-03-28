@@ -7,15 +7,18 @@
       >
         <v-spacer></v-spacer>
         <v-list-item-avatar>
-          <img src="https://randomuser.me/api/portraits/women/81.jpg" />
+          <img v-if="userdata.defaultPhoto" :src="userdata.defaultPhoto" />
+          <v-icon v-if="!userdata.defaultPhoto" size="50"
+            >mdi-account-circle</v-icon
+          >
         </v-list-item-avatar>
         <v-spacer></v-spacer>
       </v-list-item>
       <v-list-item class="text-center">
         <v-list-item-content>
-          <v-list-item-title v-if="user.email && user.emailVerified"
-            >John Doe</v-list-item-title
-          >
+          <v-list-item-title v-if="userdata.name">
+            {{ userdata.name }}
+          </v-list-item-title>
           <v-list-item-subtitle v-if="user.email">
             {{ user.email }}
           </v-list-item-subtitle>
@@ -93,6 +96,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user
+    },
+    userdata() {
+      return this.$store.state.userdata
     },
   },
 }
