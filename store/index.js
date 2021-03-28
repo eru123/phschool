@@ -7,6 +7,7 @@ export const state = () => ({
     email: null,
     emailVerified: null,
   },
+  loaded: false,
 })
 
 export const mutations = {
@@ -20,5 +21,8 @@ export const mutations = {
   ON_AUTH_STATE_CHANGED_MUTATION: (state, { authUser, claims }) => {
     const { uid, email, emailVerified } = authUser
     state.user = { uid, email, emailVerified }
+  },
+  loaded(state, value) {
+    state.loaded = Boolean(value)
   },
 }

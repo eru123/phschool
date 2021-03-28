@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1>Classes</h1>
+    <h1>Join Class</h1>
     <p>Intentioanlly left blank</p>
   </div>
 </template>
 <script>
 export default {
   head: () => ({
-    title: 'Account',
+    title: 'Join Class',
   }),
   computed: {
     user() {
@@ -15,7 +15,7 @@ export default {
     },
   },
   created() {
-    this.$store.commit('title', 'Account')
+    this.$store.commit('title', 'Join Class')
   },
 }
 </script>

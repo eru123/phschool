@@ -16,10 +16,6 @@ export default function ({ req, store, redirect }) {
       store.commit('user', { uid, email, emailVerified })
     }
   } else {
-    // const url =
-    //   typeof req.url === 'string' && req.url !== '/'
-    //     ? `?redirect=${req.url}`
-    //     : '?redirect=/'
     const user = firebase.auth.currentUser
     if (!user) {
       store.commit('user', { uid: null, email: null, emailVerified: null })
