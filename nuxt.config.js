@@ -5,11 +5,61 @@ export default {
   privateRuntimeConfig: {},
   head: {
     titleTemplate: '%s | ' + (process.env.VUE_APP_TITLE || 'School App'),
-    title: 'phschool',
+    title: process.env.VUE_APP_TITLE || 'School App',
+    // Test on: https://cards-dev.twitter.com/validator
+    // Test on: https://developers.facebook.com/tools/debug/
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'twitter:title',
+        name: 'twitter:title',
+        content: process.env.VUE_APP_TITLE || 'School App',
+      },
+      {
+        hid: 'twitter:description',
+        name: 'twitter:description',
+        content: `${
+          process.env.VUE_APP_TITLE || 'School App'
+        } is an online platform that promotes education, social media and online selling in one place.`,
+      },
+      {
+        hid: 'twitter:image',
+        name: 'twitter:image',
+        content: 'https://eru123-everyjuan.herokuapp.com/icon.png',
+      },
+      {
+        hid: 'twitter:image:alt',
+        name: 'twitter:image:alt',
+        content: process.env.VUE_APP_TITLE || 'School App',
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: process.env.VUE_APP_TITLE || 'School App',
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: `${
+          process.env.VUE_APP_TITLE || 'School App'
+        } is an online platform that promotes education, social media and online selling in one place.`,
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://eru123-everyjuan.herokuapp.com/icon.png',
+      },
+      {
+        hid: 'og:image:secure_url',
+        property: 'og:image:secure_url',
+        content: 'https://eru123-everyjuan.herokuapp.com/icon.png',
+      },
+      {
+        hid: 'og:image:alt',
+        property: 'og:image:alt',
+        content: 'https://eru123-everyjuan.herokuapp.com/icon.png',
+      },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -28,7 +78,15 @@ export default {
       fileName: 'icon.png',
     },
     manifest: {
+      name: process.env.VUE_APP_TITLE || 'School App',
+      short_name: process.env.VUE_APP_TITLE || 'School App',
+      description: `${
+        process.env.VUE_APP_TITLE || 'School App'
+      } is an online platform that promotes education, social media and online selling in one place.`,
       lang: 'en',
+      background_color: '#ffffff',
+      theme_color: '#333333',
+      useWebmanifestExtension: false,
     },
   },
   vuetify: {
