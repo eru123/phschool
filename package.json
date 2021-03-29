@@ -20,11 +20,9 @@
     "firebase": "^8.3.1",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^3.1.2",
-    "nuxt": "^2.15.3"
-  },
-  "devDependencies": {
-    "@nuxtjs/eslint-config": "^6.0.0",
+    "nuxt": "^2.15.3",
     "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/eslint-config": "^6.0.0",
     "@nuxtjs/vuetify": "^1.11.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.22.0",
