@@ -62,17 +62,18 @@ export default {
           credential: true,
           serverLogin: true,
         },
-        emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
-        emulatorHost:
-          process.env.NODE_ENV === 'development'
-            ? 'http://localhost'
-            : undefined,
+        // emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
+        // emulatorHost:
+        //   process.env.NODE_ENV === 'development'
+        //     ? 'http://localhost'
+        //     : undefined,
       },
-      firestore: {
-        emulatorPort: process.env.NODE_ENV === 'development' ? 8040 : undefined,
-        emulatorHost:
-          process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
-      },
+      firestore: true,
+      // firestore: {
+      //   emulatorPort: process.env.NODE_ENV === 'development' ? 8040 : undefined,
+      //   emulatorHost:
+      //     process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
+      // },
       storage: true,
     },
     lazy: true,
