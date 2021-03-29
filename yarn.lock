@@ -3970,6 +3970,11 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+eslint-config-eslint@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-eslint/-/eslint-config-eslint-7.0.0.tgz#8161cd98f584df04a64322440b05875dd9cbbbd8"
+  integrity sha512-gxUttladfTQaJKmSh9jbrN4Qba27yYBVwp0YsaOqjEWtOZYtc+MOgoWFh2x4Ewxjqr8sZZS1yTguXgoktzXOvQ==
+
 eslint-config-prettier@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.1.0.tgz#4ef1eaf97afe5176e6a75ddfb57c335121abc5a6"

@@ -13,6 +13,7 @@ export const state = () => ({
     name: null,
     defaultPhoto: null,
   },
+  userdataLoaded: false,
 })
 
 export const mutations = {
@@ -33,6 +34,9 @@ export const mutations = {
   userdata(state, value) {
     state.userdata = Object(value)
   },
+  userdataLoaded(state, value) {
+    state.userdataLoaded = Boolean(value)
+  },
 }
 
 export const actions = {
@@ -50,9 +54,11 @@ export const actions = {
         name: null,
         defaultPhoto: null,
       },
+      userdataLoaded: false,
     }
 
     commit('user', defaultState.user)
     commit('userdata', defaultState.userdata)
+    commit('userdataLoaded', defaultState.userdataLoaded)
   },
 }

@@ -59,6 +59,10 @@ export default {
     RightMenu,
     LeftMenu,
   },
+  loading: {
+    color: 'blue',
+    height: '5px',
+  },
   data() {
     return {
       clipped: false,
@@ -115,9 +119,11 @@ export default {
         if (!doc.exists) {
           await docRef.set(data).then(() => {
             this.$store.commit('userdata', data)
+            this.$store.commit('userdataLoaded', true)
           })
         } else {
           this.$store.commit('userdata', doc.data())
+          this.$store.commit('userdataLoaded', true)
         }
       }
     },

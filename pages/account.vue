@@ -1,23 +1,21 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <SkeletonLoader v-if="!loaded" />
-      <div v-if="loaded && user.email">
+      <SkeletonLoader v-if="!loaded || !userdataLoaded" />
+      <div v-if="userdataLoaded && loaded && user.email">
         <v-card outlined class="my-4">
           <v-card-title>Default Photo</v-card-title>
-          <v-card-text>
-            <v-row class="text-center">
-              <v-row justify="center" align="center">
-                <v-btn elevation="0" color="primary">Upload</v-btn>
-              </v-row>
-              <v-col cols="6">
-                <v-img
-                  v-if="details.defaultPhoto"
-                  :src="details.defaultPhoto"
-                />
-                <v-icon v-if="!details.defaultPhoto"> mdi-account </v-icon>
-              </v-col>
-            </v-row>
+          <v-card-text class="text-center">
+            <v-img
+              v-if="details.defaultPhoto"
+              :src="details.defaultPhoto"
+              color="primary"
+            />
+            <v-card-actions>
+              <v-spacer />
+              <v-btn elevation="0" color="primary">Upload</v-btn>
+              <v-spacer />
+            </v-card-actions>
           </v-card-text>
         </v-card>
         <v-card outlined class="my-4">
@@ -67,8 +65,7 @@ export default {
   data: () => ({
     details: {
       name: '',
-      defaultPhoto:
-        'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/104113705/original/6076831db34315e45bd2a31a9d79bb7b91d48e04/design-flat-style-minimalist-avatar-of-you.jpg',
+      defaultPhoto: '',
     },
     loading: false,
     saveLoading: false,
@@ -86,6 +83,9 @@ export default {
     },
     userdata() {
       return this.$store.state.userdata
+    },
+    userdataLoaded() {
+      return this.$store.state.userdataLoaded
     },
   },
   created() {
