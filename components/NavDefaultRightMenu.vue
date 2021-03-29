@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded">
     <v-list>
       <v-list-item
         v-if="user.email && user.emailVerified"
@@ -94,6 +94,9 @@ export default {
     ],
   }),
   computed: {
+    loaded() {
+      return this.$store.state.loaded
+    },
     user() {
       return this.$store.state.user
     },

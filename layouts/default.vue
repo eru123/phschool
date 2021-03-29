@@ -86,10 +86,12 @@ export default {
   async created() {
     this.$store.commit('loaded', false)
     await this.$fire.authReady()
-    this.$fire.auth.onAuthStateChanged((user) => {
+    this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
         this.$store.commit('user', user)
-        this.getUserData()
+        if (this.user.uid) {
+          await this.getUserData()
+        }
       } else {
         this.$store.commit('user', {
           uid: null,
@@ -102,17 +104,21 @@ export default {
   },
   methods: {
     async getUserData() {
-      await this.$fire.firestoreReady()
-      const docRef = this.$fire.firestore.collection('users').doc(this.user.uid)
-      const doc = await docRef.get()
-      const data = this.userdata
-      data.uid = this.user.uid
-      if (!doc.exists) {
-        await docRef.set(data).then(() => {
-          this.$store.commit('userdata', data)
-        })
-      } else {
-        this.$store.commit('userdata', doc.data())
+      if (this.user.uid) {
+        await this.$fire.firestoreReady()
+        const docRef = this.$fire.firestore
+          .collection('users')
+          .doc(this.user.uid)
+        const doc = await docRef.get()
+        const data = this.userdata
+        data.uid = this.user.uid
+        if (!doc.exists) {
+          await docRef.set(data).then(() => {
+            this.$store.commit('userdata', data)
+          })
+        } else {
+          this.$store.commit('userdata', doc.data())
+        }
       }
     },
   },

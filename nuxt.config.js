@@ -11,7 +11,10 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
+  },
+  server: {
+    host: '0.0.0.0',
   },
   css: [],
   plugins: ['~/plugins/firebase.js'],
@@ -51,23 +54,24 @@ export default {
       measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENTID,
     },
     services: {
-      auth: {
-        persistence: 'local', // default
-        initialize: {
-          onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
-          onAuthStateChangedAction: 'onAuthStateChangedAction',
-          subscribeManually: false,
-        },
-        ssr: {
-          credential: true,
-          serverLogin: true,
-        },
-        // emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
-        // emulatorHost:
-        //   process.env.NODE_ENV === 'development'
-        //     ? 'http://localhost'
-        //     : undefined,
-      },
+      auth: true,
+      // auth: {
+      //   persistence: 'local', // default
+      //   initialize: {
+      //     onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+      //     onAuthStateChangedAction: 'onAuthStateChangedAction',
+      //     subscribeManually: false,
+      //   },
+      //   ssr: {
+      //     credential: true,
+      //     serverLogin: true,
+      //   },
+      // emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
+      // emulatorHost:
+      //   process.env.NODE_ENV === 'development'
+      //     ? 'http://localhost'
+      //     : undefined,
+      // },
       firestore: true,
       // firestore: {
       //   emulatorPort: process.env.NODE_ENV === 'development' ? 8040 : undefined,
@@ -78,5 +82,19 @@ export default {
     },
     lazy: true,
   },
-  build: {},
+  build: {
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      },
+    },
+  },
 }

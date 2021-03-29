@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded">
     <v-list dense rounded>
       <v-list-item to="/" router exact>
         <v-list-item-action>
@@ -41,6 +41,9 @@
 <script>
 export default {
   computed: {
+    loaded() {
+      return this.$store.state.loaded
+    },
     user() {
       return this.$store.state.user
     },

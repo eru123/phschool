@@ -57,15 +57,19 @@
         </v-card-text>
       </v-card>
       <v-card v-if="!loaded" elevation="0" class="mt-8">
-        <div align="center">
+        <v-card-title>
+          <v-spacer />
+          <span>Verifying Credentials</span>
+          <v-spacer />
+        </v-card-title>
+        <v-card-text class="text-center my-8">
           <v-progress-circular
             :size="70"
-            :width="7"
+            :width="3"
             color="secondary"
             indeterminate
           />
-          <h1 class="h1 mt-8">Verifying <br />Credentials</h1>
-        </div>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>

@@ -24,6 +24,9 @@
               autocomplete="off"
             />
             <v-checkbox v-model="isPublicClass" label="Public Class" />
+            <p>
+              Auto accept student's request if <b>Public Class</b> is enabled
+            </p>
             <v-card-actions>
               <v-spacer />
               <v-btn
