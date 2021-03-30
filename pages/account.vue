@@ -3,21 +3,7 @@
     <v-col cols="12" sm="8" md="6">
       <SkeletonLoader v-if="!loaded || !userdataLoaded" />
       <div v-if="userdataLoaded && loaded && user.email">
-        <v-card outlined class="my-4">
-          <v-card-title>Default Photo</v-card-title>
-          <v-card-text class="text-center">
-            <v-img
-              v-if="details.defaultPhoto"
-              :src="details.defaultPhoto"
-              color="primary"
-            />
-            <v-card-actions>
-              <v-spacer />
-              <v-btn elevation="0" color="primary">Upload</v-btn>
-              <v-spacer />
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
+        <DefaultPhoto />
         <v-card outlined class="my-4">
           <v-card-title>Edit Account Details</v-card-title>
           <v-form @submit.prevent="saveDetails">
@@ -56,10 +42,12 @@
   </v-row>
 </template>
 <script>
+import DefaultPhoto from '~/components/AccountChangeDefaultPhoto.vue'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
     SkeletonLoader,
+    DefaultPhoto,
   },
   middleware: ['auth-only'],
   data: () => ({
@@ -67,6 +55,8 @@ export default {
       name: '',
       defaultPhoto: '',
     },
+    dialog: false,
+    upBtn: true,
     loading: false,
     saveLoading: false,
     error: '',
