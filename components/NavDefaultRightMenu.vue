@@ -7,7 +7,29 @@
       >
         <v-spacer></v-spacer>
         <v-list-item-avatar>
-          <img v-if="userdata.defaultPhoto" :src="userdata.defaultPhoto" />
+          <v-img
+            v-if="userdata.defaultPhoto"
+            :src="userdata.defaultPhoto"
+            height="50"
+            width="50"
+            style="
+              margin: 1em auto;
+              border: 1px solid #ccc;
+              background: #f2f2f2;
+              border-radius: 50%;
+            "
+          >
+            <template #placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="secondary"
+                  size="10"
+                  width="1"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
           <v-icon v-if="!userdata.defaultPhoto" size="50"
             >mdi-account-circle</v-icon
           >

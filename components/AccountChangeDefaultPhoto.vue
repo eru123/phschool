@@ -18,7 +18,9 @@
           <v-row class="fill-height ma-0" align="center" justify="center">
             <v-progress-circular
               indeterminate
-              color="grey lighten-5"
+              color="secondary"
+              size="50"
+              width="1"
             ></v-progress-circular>
           </v-row>
         </template>
@@ -44,7 +46,7 @@
                     margin: 1em auto;
                     border: 1px solid #ccc;
                     background: #f2f2f2;
-                    border-radius: 20px;
+                    border-radius: 50%;
                   "
                 />
                 <v-card

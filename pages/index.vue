@@ -10,6 +10,7 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
+        <WelcomeTester />
         <SkeletonLoader />
       </v-col>
     </v-row>
@@ -19,11 +20,13 @@
 import EmailVerification from '~/components/CardEmailVerification.vue'
 import ChangeName from '~/components/CardChangeName.vue'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
+import WelcomeTester from '~/components/CardWelcomeTester.vue'
 export default {
   components: {
     EmailVerification,
     ChangeName,
     SkeletonLoader,
+    WelcomeTester,
   },
   head: () => ({
     title: 'Home',
