@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="loaded && user.email" outlined elevation="0" class="my-4">
+  <v-card v-if="loaded && user.email" outlined elevation="0">
     <v-card-title> Welcome </v-card-title>
     <v-card-text>
       Salamat kaibigan sa pagpapaunlak na subukan ang app na ito. Click mo lang

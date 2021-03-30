@@ -19,7 +19,11 @@
       <v-toolbar-title v-if="loaded && user.email" v-text="title" />
       <v-toolbar-title v-if="loaded && !user.email" v-text="$config.title" />
       <v-spacer />
-      <v-btn v-if="user.email" icon @click.stop="rightDrawer = !rightDrawer">
+      <v-btn
+        v-if="loaded && userdataLoaded && user.email"
+        icon
+        @click.stop="rightDrawer = !rightDrawer"
+      >
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
       <v-btn
@@ -85,6 +89,9 @@ export default {
     },
     userdata() {
       return this.$store.state.userdata
+    },
+    userdataLoaded() {
+      return this.$store.state.userdataLoaded
     },
   },
   async created() {
