@@ -27,13 +27,18 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.7.0",
+    "filereader": "^0.10.3",
     "firebase": "^8.3.1",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^3.1.2",
     "nuxt": "^2.15.3",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "uuid": "^8.3.2"
   },
   "engines": {
-    "yarn": "1.22.x"
-  }
+    "yarn": "1.22.x",
+    "node": "15.x",
+    "npm": "7.x"
+  },
+  "devDependencies": {}
 }
