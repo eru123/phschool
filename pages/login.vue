@@ -39,7 +39,6 @@
                 large
                 :loading="loading"
                 :disabled="loading"
-                @click="login"
               >
                 Login
               </v-btn>

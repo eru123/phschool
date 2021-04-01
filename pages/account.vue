@@ -29,7 +29,7 @@
                 :loading="saveLoading"
                 elevation="0"
                 color="primary"
-                @click="saveDetails"
+                type="submit"
               >
                 <v-icon class="mr-2">mdi-content-save</v-icon>
                 Apply

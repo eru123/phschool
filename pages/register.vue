@@ -42,7 +42,6 @@
                 large
                 :loading="loading"
                 :disabled="loading"
-                @click="login"
               >
                 Register
               </v-btn>
