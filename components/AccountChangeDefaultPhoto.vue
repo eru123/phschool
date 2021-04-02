@@ -131,6 +131,10 @@ export default {
     error: '',
     loading: false,
     updateData: false,
+    meta: {
+      authorId: '',
+      author: '',
+    },
   }),
   computed: {
     userdata() {
@@ -171,8 +175,15 @@ export default {
       this.uploadValue = 1
       this.loading = true
       this.updateData = false
+      this.meta = {
+        authorId: this.user?.uid,
+        author: this.userdata?.name,
+      }
+      const refId = `profile/${uuid()}`
       await this.$fire.storageReady()
-      const storageRef = this.$fire.storage.ref(uuid()).put(this.imageData)
+      const storageRef = this.$fire.storage
+        .ref(refId)
+        .put(this.imageData, this.meta)
       storageRef.on(
         `state_changed`,
         (snapshot) => {

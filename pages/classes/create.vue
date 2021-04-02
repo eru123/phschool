@@ -4,7 +4,15 @@
       <v-card v-if="loaded && userdataLoaded" class="mt-4" elevation="0">
         <v-card-actions>
           <v-spacer />
-          <v-btn elevation="0" color="red" dark to="/classes" router exact>
+          <v-btn
+            :disabled="loading"
+            elevation="0"
+            color="red"
+            dark
+            to="/classes"
+            router
+            exact
+          >
             Cancel
           </v-btn>
         </v-card-actions>
@@ -16,17 +24,23 @@
             <v-text-field
               v-model="name"
               label="Class Name"
+              :disabled="loading"
               minlength="1"
               maxlength="24"
               autocomplete="off"
             />
             <v-textarea
               v-model="description"
+              :disabled="loading"
               label="Class Description"
               autocomplete="off"
               minlength="4000"
             />
-            <v-checkbox v-model="isPublicClass" label="Public Class" />
+            <v-checkbox
+              v-model="isPublicClass"
+              :disabled="loading"
+              label="Public Class"
+            />
             <p>
               Auto accept student's request if <b>Public Class</b> is enabled
             </p>
@@ -51,7 +65,7 @@
   </v-row>
 </template>
 <script>
-import { v4 as uuid } from 'uuid'
+import { v1 as uuid } from 'uuid'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
@@ -107,6 +121,7 @@ export default {
       const date = new Date(dateNow)
       const docId = uuid()
       const cD = {
+        code: docId,
         title: name,
         description,
         public: isPublicClass,
@@ -122,7 +137,31 @@ export default {
           months[date.getMonth()]
         } ${date.getDay()} ${date.getFullYear()}`,
       }
-      console.log(docId, cD)
+      this.sendData(docId, cD)
+    },
+    async sendData(code, data) {
+      this.loading = true
+      await this.$fire.firestoreReady()
+      const docRef = this.$fire.firestore.collection('classes').doc(code)
+      const doc = await docRef.get()
+      if (!doc.exists) {
+        await docRef
+          .set(data)
+          .then(() => {
+            this.loading = false
+            this.$router.push(`/class/${code}/`)
+          })
+          .catch((e) => {
+            this.error = e.message || 'Unkown error occur, try again later'
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } else {
+        this.error =
+          'Class code already exists, click create button again to create new code'
+        this.loading = false
+      }
     },
   },
 }
