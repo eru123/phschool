@@ -7,7 +7,7 @@
       <a v-if="show" href="#" @click="show = false">Hide</a>
     </v-card-subtitle>
     <v-divider v-if="show"></v-divider>
-    <v-list v-if="show">
+    <v-list v-if="show" class="py-0">
       <v-list-item
         v-for="item in items"
         :key="item.code"
@@ -21,10 +21,24 @@
           <v-list-item-subtitle> {{ item.description }} </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="cc.length > 5">
+      <v-divider />
+      <v-list-item v-if="showAll == false" @click="showAllItems">
         <v-spacer />
-        <a v-if="showAll == false" href="#" @click="showAllItems"> Show All </a>
-        <a v-if="showAll == true" href="#" @click="collapseItems"> Collapse </a>
+        <v-list-item-content class="text-center">
+          <v-list-item-title> Show All </v-list-item-title>
+          <v-list-item-subtitle>Click to show all items</v-list-item-subtitle>
+        </v-list-item-content>
+        <v-spacer />
+      </v-list-item>
+      <v-list-item
+        v-if="cc.length > 5 && showAll == true"
+        @click="collapseItems"
+      >
+        <v-spacer />
+        <v-list-item-content class="text-center">
+          <v-list-item-title> Collapse </v-list-item-title>
+          <v-list-item-subtitle>Click to hide items</v-list-item-subtitle>
+        </v-list-item-content>
         <v-spacer />
       </v-list-item>
     </v-list>
@@ -35,7 +49,7 @@ export default {
   data: () => ({
     cc: [],
     items: [],
-    show: true,
+    show: false,
     showAll: false,
   }),
   computed: {
