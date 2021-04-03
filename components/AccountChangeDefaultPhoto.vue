@@ -68,7 +68,7 @@
                   @change="previewImage"
                 />
                 <v-btn
-                  :disabled="loading"
+                  v-if="!loading"
                   elevation="0"
                   color="primary"
                   @click="click1"
@@ -189,6 +189,9 @@ export default {
         (snapshot) => {
           this.uploadValue =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          if (this.uploadValue < 1) {
+            this.uploadValue = 1
+          }
         },
         (e) => {
           this.error = e.message
@@ -201,14 +204,14 @@ export default {
             this.imageData = null
             this.uploadValue = 0
             const ndata = this.userdata
-            ndata.defaultPhoto = url
+            ndata.defaultPhoto = refId
 
-            await this.updateUserData(ndata)
+            await this.updateUserData(url, ndata)
           })
         }
       )
     },
-    async updateUserData(data) {
+    async updateUserData(url, data) {
       this.loading = true
       this.updateData = true
       this.error = ''
@@ -220,6 +223,7 @@ export default {
         await docRef
           .set(data)
           .then(() => {
+            data.defaultPhoto = url
             this.$store.commit('userdata', data)
             this.dialog = false
           })
@@ -234,6 +238,7 @@ export default {
         await docRef
           .set({ defaultPhoto: data.defaultPhoto }, { merge: true })
           .then(() => {
+            data.defaultPhoto = url
             this.$store.commit('userdata', data)
             this.dialog = false
           })
