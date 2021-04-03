@@ -223,8 +223,6 @@ export default {
         await docRef
           .set(data)
           .then(() => {
-            data.defaultPhoto = url
-            this.$store.commit('userdata', data)
             this.dialog = false
           })
           .catch((e) => {
@@ -238,8 +236,6 @@ export default {
         await docRef
           .set({ defaultPhoto: data.defaultPhoto }, { merge: true })
           .then(() => {
-            data.defaultPhoto = url
-            this.$store.commit('userdata', data)
             this.dialog = false
           })
           .catch((e) => {

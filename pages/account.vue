@@ -53,7 +53,6 @@ export default {
   data: () => ({
     details: {
       name: '',
-      defaultPhoto: '',
     },
     dialog: false,
     upBtn: true,
@@ -78,9 +77,13 @@ export default {
       return this.$store.state.userdataLoaded
     },
   },
+  watch: {
+    userdata() {
+      this.resetDetails()
+    },
+  },
   created() {
     this.$store.commit('title', 'Account')
-    this.resetDetails()
   },
   methods: {
     resetDetails() {
@@ -102,14 +105,14 @@ export default {
           const prep = await doc.get()
           if (prep.exists) {
             const data = await prep.data()
-            this.$store.commit('userdata', data)
             return data
           }
           this.error = 'Failed to save details'
         })
         .catch((e) => {
-          this.error = e.message
-          // 'There is a problem saving you account details, try again later.'
+          this.error =
+            e.message ||
+            'There is a problem saving you account details, try again later.'
         })
         .finally(() => {
           this.loading = false

@@ -122,39 +122,45 @@ export default {
           .collection('users')
           .doc(this.user.uid)
 
-        const doc = await docRef.get()
         let data = this.userdata
         data.uid = this.user.uid
 
-        if (!doc.exists) {
-          await docRef.set(data).then(() => {
-            data.defaultPhoto = null
-            this.$store.commit('userdata', data)
-            this.$store.commit('userdataLoaded', true)
+        this.$fire.firestore
+          .collection('users')
+          .where('uid', '==', this.user.uid)
+          .onSnapshot((querySnapshot) => {
+            querySnapshot.forEach(async (doc) => {
+              if (!doc.exists) {
+                await docRef.set(data).then(() => {
+                  data.defaultPhoto = null
+                  this.$store.commit('userdata', data)
+                  this.$store.commit('userdataLoaded', true)
+                })
+              } else {
+                data = doc.data()
+                if (data.defaultPhoto) {
+                  await this.$fire.storageReady()
+                  await this.$fire.storage
+                    .ref(data.defaultPhoto)
+                    .getDownloadURL()
+                    .then((url) => {
+                      data.defaultPhoto = url
+                    })
+                    .catch(() => {
+                      data.defaultPhoto = null
+                    })
+                    .finally(() => {
+                      this.$store.commit('userdata', data)
+                      this.$store.commit('userdataLoaded', true)
+                    })
+                } else {
+                  data.defaultPhoto = null
+                  this.$store.commit('userdata', data)
+                  this.$store.commit('userdataLoaded', true)
+                }
+              }
+            })
           })
-        } else {
-          data = doc.data()
-          if (data.defaultPhoto) {
-            await this.$fire.storageReady()
-            await this.$fire.storage
-              .ref(data.defaultPhoto)
-              .getDownloadURL()
-              .then((url) => {
-                data.defaultPhoto = url
-              })
-              .catch(() => {
-                data.defaultPhoto = null
-              })
-              .finally(() => {
-                this.$store.commit('userdata', data)
-                this.$store.commit('userdataLoaded', true)
-              })
-          } else {
-            data.defaultPhoto = null
-            this.$store.commit('userdata', data)
-            this.$store.commit('userdataLoaded', true)
-          }
-        }
       }
     },
   },
