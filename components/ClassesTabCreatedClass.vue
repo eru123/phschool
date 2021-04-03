@@ -25,7 +25,9 @@
       <v-list-item v-if="showAll == false" @click="showAllItems">
         <v-spacer />
         <v-list-item-content class="text-center">
-          <v-list-item-title> Show All </v-list-item-title>
+          <v-list-item-title style="color: dodgerblue">
+            Show All
+          </v-list-item-title>
           <v-list-item-subtitle>Click to show all items</v-list-item-subtitle>
         </v-list-item-content>
         <v-spacer />
@@ -36,10 +38,12 @@
       >
         <v-spacer />
         <v-list-item-content class="text-center">
-          <v-list-item-title> Show less </v-list-item-title>
-          <v-list-item-subtitle
-            >Click to show only 5 items</v-list-item-subtitle
-          >
+          <v-list-item-title style="color: dodgerblue">
+            Show less
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Click to show only 5 items
+          </v-list-item-subtitle>
         </v-list-item-content>
         <v-spacer />
       </v-list-item>
@@ -51,7 +55,7 @@ export default {
   data: () => ({
     cc: [],
     items: [],
-    show: false,
+    show: true,
     showAll: false,
   }),
   computed: {
