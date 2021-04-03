@@ -36,8 +36,10 @@
       >
         <v-spacer />
         <v-list-item-content class="text-center">
-          <v-list-item-title> Collapse </v-list-item-title>
-          <v-list-item-subtitle>Click to hide items</v-list-item-subtitle>
+          <v-list-item-title> Show less </v-list-item-title>
+          <v-list-item-subtitle
+            >Click to show only 5 items</v-list-item-subtitle
+          >
         </v-list-item-content>
         <v-spacer />
       </v-list-item>

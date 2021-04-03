@@ -63,10 +63,6 @@ export default {
     RightMenu,
     LeftMenu,
   },
-  loading: {
-    color: 'blue',
-    height: '5px',
-  },
   data() {
     return {
       clipped: false,
