@@ -1,8 +1,38 @@
 <template>
-  <div><h1>Code</h1></div>
+  <v-row v-if="loaded && user.email" justify="center" align="center">
+    <v-col cols="12" sm="8" md="6" class="my-4">
+      <v-card elevation="0">
+        <v-btn
+          elevation="0"
+          class="mb-4"
+          color="primary"
+          to="/classes"
+          router
+          exact
+        >
+          Back to Classes
+        </v-btn>
+      </v-card>
+      <v-card outlined>
+        <v-card-title>{{ title }}</v-card-title>
+        <v-divider></v-divider>
+        <v-card-subtitle class="py-2">
+          <b>
+            <small> {{ date }} </small>
+          </b>
+          <br />
+          {{ description }}
+        </v-card-subtitle>
+        <v-card-text class="py-0"> CODE: {{ code }} </v-card-text>
+        <v-card-actions class="pt-2">
+          <v-spacer /> <v-btn elevation="0" color="success" small>COPY</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 <script>
-// import firebase from '~/plugins/firebase'
+import { mapState } from 'vuex'
 export default {
   async asyncData({ $fire, route }) {
     let data = {
@@ -30,9 +60,12 @@ export default {
 
     return { ...data }
   },
+  data: () => ({
+    classCode: '',
+  }),
   head() {
     return {
-      title: this.title + ' - class by ' + this.creatorName,
+      title: this.title || 'Class',
       meta: [
         {
           hid: 'description',
@@ -42,5 +75,9 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState(['loaded', 'user']),
+  },
+  method: {},
 }
 </script>

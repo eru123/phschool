@@ -5,14 +5,13 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   head: () => ({
     title: 'Preference',
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
+    ...mapState(['user']),
   },
   created() {
     this.$store.commit('title', 'Preference')

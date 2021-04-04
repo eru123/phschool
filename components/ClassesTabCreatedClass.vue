@@ -22,21 +22,21 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <v-list-item v-if="showAll == false" @click="showAllItems">
-        <v-spacer />
+      <v-list-item
+        v-if="cc.length > 5 && showAll == false"
+        @click="showAllItems"
+      >
         <v-list-item-content class="text-center">
           <v-list-item-title style="color: dodgerblue">
             Show All
           </v-list-item-title>
           <v-list-item-subtitle>Click to show all items</v-list-item-subtitle>
         </v-list-item-content>
-        <v-spacer />
       </v-list-item>
       <v-list-item
         v-if="cc.length > 5 && showAll == true"
         @click="collapseItems"
       >
-        <v-spacer />
         <v-list-item-content class="text-center">
           <v-list-item-title style="color: dodgerblue">
             Show less
@@ -45,7 +45,6 @@
             Click to show only 5 items
           </v-list-item-subtitle>
         </v-list-item-content>
-        <v-spacer />
       </v-list-item>
     </v-list>
   </v-card>

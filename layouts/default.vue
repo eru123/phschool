@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import RightMenu from '~/components/NavDefaultRightMenu.vue'
 import LeftMenu from '~/components/NavDefaultLeftMenu.vue'
 
@@ -74,21 +75,7 @@ export default {
     }
   },
   computed: {
-    title() {
-      return this.$store.state.title
-    },
-    user() {
-      return this.$store.state.user
-    },
-    loaded() {
-      return this.$store.state.loaded
-    },
-    userdata() {
-      return this.$store.state.userdata
-    },
-    userdataLoaded() {
-      return this.$store.state.userdataLoaded
-    },
+    ...mapState(['title', 'user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   async created() {
     this.$store.commit('loaded', false)

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded">
+  <div v-if="loaded && userdataLoaded">
     <v-list>
       <v-list-item
         v-if="user.email && user.emailVerified"
@@ -124,6 +124,9 @@ export default {
     },
     userdata() {
       return this.$store.state.userdata
+    },
+    userdataLoaded() {
+      return this.$store.state.userdataLoaded
     },
   },
 }

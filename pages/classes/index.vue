@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import CreatedClass from '~/components/ClassesTabCreatedClass.vue'
 import JoinedClass from '~/components/ClassesTabJoinedClass.vue'
 export default {
@@ -32,12 +33,7 @@ export default {
     title: 'Classes',
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
-    loaded() {
-      return this.$store.state.loaded
-    },
+    ...mapState(['user', 'loaded']),
   },
   created() {
     this.$store.commit('title', 'Classes')

@@ -61,4 +61,7 @@ export const actions = {
     commit('userdata', defaultState.userdata)
     commit('userdataLoaded', defaultState.userdataLoaded)
   },
+  async user({ commit, state }) {},
+  async logout() {},
+  async userdata({ commit, state }, { uid }) {},
 }

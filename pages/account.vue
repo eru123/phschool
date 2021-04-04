@@ -42,6 +42,7 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 import DefaultPhoto from '~/components/AccountChangeDefaultPhoto.vue'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
@@ -64,18 +65,7 @@ export default {
     title: 'Account',
   }),
   computed: {
-    loaded() {
-      return this.$store.state.loaded
-    },
-    user() {
-      return this.$store.state.user
-    },
-    userdata() {
-      return this.$store.state.userdata
-    },
-    userdataLoaded() {
-      return this.$store.state.userdataLoaded
-    },
+    ...mapState(['loaded', 'user', 'userdata', 'userdataLoaded']),
   },
   watch: {
     userdata() {
@@ -84,6 +74,7 @@ export default {
   },
   created() {
     this.$store.commit('title', 'Account')
+    this.resetDetails()
   },
   methods: {
     resetDetails() {

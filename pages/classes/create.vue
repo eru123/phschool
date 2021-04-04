@@ -66,6 +66,7 @@
 </template>
 <script>
 import { v1 as uuid } from 'uuid'
+import { mapState } from 'vuex'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
@@ -84,18 +85,7 @@ export default {
     title: 'Create Class',
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
-    userdata() {
-      return this.$store.state.userdata
-    },
-    loaded() {
-      return this.$store.state.loaded
-    },
-    userdataLoaded() {
-      return this.$store.state.userdataLoaded
-    },
+    ...mapState(['user', 'userdata', 'loaded', 'userdataLoaded']),
   },
   created() {
     this.$store.commit('title', 'Create Class')

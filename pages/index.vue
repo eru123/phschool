@@ -4,7 +4,9 @@
       <v-col cols="12" sm="8" md="6">
         <EmailVerification v-if="!user.emailVerified" />
         <ChangeName
-          v-if="loaded && user.emailVerified && userdata.uid && !userdata.name"
+          v-if="
+            loaded && user.emailVerified && userdataLoaded && !userdata.name
+          "
         />
       </v-col>
     </v-row>
@@ -17,6 +19,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import EmailVerification from '~/components/CardEmailVerification.vue'
 import ChangeName from '~/components/CardChangeName.vue'
 import SkeletonLoader from '~/components/SkeletonLoader.vue'
@@ -32,15 +35,7 @@ export default {
     title: 'Home',
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
-    loaded() {
-      return this.$store.state.loaded
-    },
-    userdata() {
-      return this.$store.state.userdata
-    },
+    ...mapState(['user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   created() {
     this.$store.commit('title', 'Home')
