@@ -25,7 +25,37 @@
         </v-card-subtitle>
         <v-card-text class="py-0"> CODE: {{ code }} </v-card-text>
         <v-card-actions class="pt-2">
-          <v-spacer /> <v-btn elevation="0" color="success" small>COPY</v-btn>
+          <v-spacer />
+          <v-btn
+            v-clipboard:copy="code"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+            elevation="0"
+            color="success"
+            small
+          >
+            COPY
+          </v-btn>
+          <v-snackbar
+            v-model="snackbar.show"
+            :timeout="snackbar.timeout"
+            :color="snackbar.color"
+            right
+            bottom
+          >
+            {{ snackbar.text }}
+
+            <template #action="{ attrs }">
+              <v-btn
+                color="white"
+                text
+                v-bind="attrs"
+                @click="snackbar.show = false"
+              >
+                Close
+              </v-btn>
+            </template>
+          </v-snackbar>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -61,7 +91,13 @@ export default {
     return { ...data }
   },
   data: () => ({
-    classCode: '',
+    snackbar: {
+      show: true,
+      text: '',
+      timeout: 2000,
+      color: '',
+    },
+    snackbarText: '',
   }),
   head() {
     return {
@@ -78,6 +114,17 @@ export default {
   computed: {
     ...mapState(['loaded', 'user']),
   },
-  method: {},
+  methods: {
+    onCopy(e) {
+      this.snackbar.show = true
+      this.snackbar.text = 'Code copied!'
+      this.snackbar.color = 'success'
+    },
+    onError(e) {
+      this.snackbar.show = true
+      this.snackbar.text = 'Code failed copied!'
+      this.snackbar.color = 'warning'
+    },
+  },
 }
 </script>

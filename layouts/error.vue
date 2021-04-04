@@ -19,7 +19,7 @@ const xcode = {
 const dcode = 'Unknown Error Occur'
 
 export default {
-  layout: 'plain',
+  layout: 'default',
   props: {
     error: {
       type: Object,

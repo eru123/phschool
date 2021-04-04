@@ -67,7 +67,11 @@ export default {
     host: '0.0.0.0',
   },
   css: [],
-  plugins: ['~/plugins/firebase.js'],
+  plugins: [
+    '~/plugins/firebase.js',
+    '~/plugins/school.js',
+    '~/plugins/vue-clipboard2.js',
+  ],
   components: true,
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxtjs/pwa', '@nuxtjs/firebase'],
@@ -158,5 +162,6 @@ export default {
         },
       },
     },
+    transpile: [],
   },
 }

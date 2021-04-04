@@ -78,14 +78,11 @@ export default {
     ...mapState(['title', 'user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   async created() {
-    this.$store.commit('loaded', false)
     await this.$fire.authReady()
+    this.$store.commit('loaded', false)
     this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        this.$store.commit('user', user)
-        if (this.user.uid) {
-          await this.getUserData()
-        }
+        await this.$store.dispatch('user', user)
       } else {
         this.$store.commit('user', {
           uid: null,
@@ -95,57 +92,6 @@ export default {
       }
       this.$store.commit('loaded', true)
     })
-  },
-  methods: {
-    async getUserData() {
-      if (this.user.uid) {
-        await this.$fire.firestoreReady()
-
-        const docRef = this.$fire.firestore
-          .collection('users')
-          .doc(this.user.uid)
-
-        let data = this.userdata
-        data.uid = this.user.uid
-
-        this.$fire.firestore
-          .collection('users')
-          .where('uid', '==', this.user.uid)
-          .onSnapshot((querySnapshot) => {
-            querySnapshot.forEach(async (doc) => {
-              if (!doc.exists) {
-                await docRef.set(data).then(() => {
-                  data.defaultPhoto = null
-                  this.$store.commit('userdata', data)
-                  this.$store.commit('userdataLoaded', true)
-                })
-              } else {
-                data = doc.data()
-                if (data.defaultPhoto) {
-                  await this.$fire.storageReady()
-                  await this.$fire.storage
-                    .ref(data.defaultPhoto)
-                    .getDownloadURL()
-                    .then((url) => {
-                      data.defaultPhoto = url
-                    })
-                    .catch(() => {
-                      data.defaultPhoto = null
-                    })
-                    .finally(() => {
-                      this.$store.commit('userdata', data)
-                      this.$store.commit('userdataLoaded', true)
-                    })
-                } else {
-                  data.defaultPhoto = null
-                  this.$store.commit('userdata', data)
-                  this.$store.commit('userdataLoaded', true)
-                }
-              }
-            })
-          })
-      }
-    },
   },
 }
 </script>
