@@ -1,7 +1,23 @@
 <template>
   <v-row v-if="loaded && user.email" justify="center" align="center">
     <v-col cols="12" sm="8" md="6" class="my-4">
-      <v-card outlined>
+      <v-card v-if="loaded && userdataLoaded" elevation="0">
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="loading"
+            elevation="0"
+            color="red"
+            dark
+            to="/classes"
+            router
+            exact
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="loaded && userdataLoaded" class="my-4" outlined>
         <v-card-title> Join Class </v-card-title>
         <v-card-subtitle> Input the class code </v-card-subtitle>
         <v-form @submit.prevent="joinClass">
@@ -19,66 +35,50 @@
           </v-card-actions>
         </v-form>
       </v-card>
+      <SkeletonLoader />
     </v-col>
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
+import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
-  async asyncData({ $fire, route }) {
-    let data = {
-      error: '',
-      title: '',
-      description: '',
-    }
-    try {
-      const code = route.params.code
-      await $fire.firestoreReady()
-      const db = $fire.firestore
-      const docRef = db.collection('classes').doc(code)
-      return await docRef.get().then((doc) => {
-        if (doc.exists) {
-          const docData = doc.data()
-          data = { ...docData, error: data.error }
-        } else {
-          data.error = 'Class not found'
-        }
-        return { ...data }
-      })
-    } catch {
-      data.error = 'Failed to retrieve data'
-    }
-
-    return { ...data }
+  components: {
+    SkeletonLoader,
   },
+  middleware: ['auth-only'],
   data: () => ({
     classCode: '',
+    loading: false,
   }),
   head() {
     return {
-      title: this.title + ' - class by ' + this.creatorName,
+      title: 'Join Class',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.description,
+          content: 'Join to your class now',
         },
       ],
     }
   },
   computed: {
-    loaded() {
-      return this.$store.state.loaded
-    },
-    user() {
-      return this.$store.state.user
-    },
+    ...mapState(['loaded', 'user', 'userdataLoaded']),
   },
   created() {
     this.$store.commit('title', 'Join Class')
   },
   methods: {
-    joinClass() {
-      console.log('joined')
+    async joinClass() {
+      await this.$fire.firestoreReady()
+      this.loading = true
+      const docRef = this.$fire.firestore
+        .collection('classes')
+        .doc(this.classCode)
+      const docData = await docRef.get()
+
+      console.log(docData)
     },
   },
 }

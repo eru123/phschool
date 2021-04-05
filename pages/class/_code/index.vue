@@ -16,15 +16,15 @@
       <v-card outlined>
         <v-card-title>{{ title }}</v-card-title>
         <v-divider></v-divider>
-        <v-card-subtitle class="py-2">
+        <v-card-subtitle class="pb-0 pt-2 px-4">
           <b>
             <small> {{ date }} </small>
           </b>
           <br />
           {{ description }}
         </v-card-subtitle>
-        <v-card-text class="py-0"> CODE: {{ code }} </v-card-text>
-        <v-card-actions class="pt-2">
+        <v-card-actions class="px-4 pt-0">
+          <small style="color: gray"> <b> CODE: </b> {{ code }}</small>
           <v-spacer />
           <v-btn
             v-clipboard:copy="code"
@@ -92,7 +92,7 @@ export default {
   },
   data: () => ({
     snackbar: {
-      show: true,
+      show: false,
       text: '',
       timeout: 2000,
       color: '',

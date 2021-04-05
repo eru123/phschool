@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card v-if="loaded && userdataLoaded" class="mt-4" elevation="0">
+    <v-col cols="12" sm="8" md="6" class="my-4">
+      <v-card v-if="loaded && userdataLoaded" elevation="0">
         <v-card-actions>
           <v-spacer />
           <v-btn
