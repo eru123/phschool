@@ -51,10 +51,23 @@
     >
       <RightMenu />
     </v-navigation-drawer>
+    <v-footer
+      v-if="offline"
+      padless
+      color="secondary"
+      class="text-center"
+      dark
+      app
+    >
+      <v-spacer />
+      <small>You are offline</small>
+      <v-spacer />
+    </v-footer>
   </v-app>
 </template>
 
 <script>
+import navigator from 'navigator'
 import { mapState } from 'vuex'
 import RightMenu from '~/components/NavDefaultRightMenu.vue'
 import LeftMenu from '~/components/NavDefaultLeftMenu.vue'
@@ -72,8 +85,10 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
+      offline: false,
     }
   },
+
   computed: {
     ...mapState(['title', 'user', 'loaded', 'userdata', 'userdataLoaded']),
   },
@@ -92,6 +107,16 @@ export default {
       }
       this.$store.commit('loaded', true)
     })
+
+    if (process.client) {
+      this.offline = navigator.offline
+      addEventListener('offline', () => {
+        this.offline = true
+      })
+      addEventListener('online', () => {
+        this.offline = false
+      })
+    }
   },
 }
 </script>

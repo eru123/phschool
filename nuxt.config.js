@@ -165,7 +165,7 @@ export default {
     transpile: [],
   },
   loading: {
-    color: '#29a329',
+    color: 'dodgerblue',
     height: '5px',
     continuous: true,
   },

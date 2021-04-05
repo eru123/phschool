@@ -1,6 +1,10 @@
 <template>
-  <v-card v-if="loaded && user.email" outlined elevation="0">
-    <v-card-title> Welcome </v-card-title>
+  <v-card
+    v-if="loaded && userdataLoaded && userdata.name"
+    outlined
+    elevation="0"
+  >
+    <v-card-title> Welcome, {{ userdata.name }}! </v-card-title>
     <v-card-text>
       Salamat kaibigan sa pagpapaunlak na subukan ang app na ito. Click mo lang
       yung account icon tas bandang taas, tas click mo yung account tab, then
@@ -10,14 +14,10 @@
   </v-card>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   computed: {
-    user() {
-      return this.$store.state.user
-    },
-    loaded() {
-      return this.$store.state.loaded
-    },
+    ...mapState(['user', 'loaded', 'userdata', 'userdataLoaded']),
   },
 }
 </script>

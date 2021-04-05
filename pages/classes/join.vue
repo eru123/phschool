@@ -25,6 +25,8 @@
             <v-text-field
               v-model="classCode"
               label="Code"
+              :loading="loading"
+              :disabled="loading"
               hide-details="auto"
               autocomplete="off"
             />
