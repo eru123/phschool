@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6" class="my-4">
-      <v-card v-if="loaded && userdataLoaded" elevation="0">
+    <v-col cols="12" sm="10" md="8" class="my-4">
+      <v-card v-if="userdataLoaded" elevation="0">
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -17,7 +17,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-form v-if="loaded && userdataLoaded" @submit.prevent="createClass">
+      <v-form v-if="userdataLoaded" @submit.prevent="createClass">
         <v-card class="my-4" outlined>
           <v-card-title>Create Class</v-card-title>
           <v-card-text>
@@ -52,7 +52,7 @@
                 elevation="0"
                 large
                 :loading="loading"
-                :disabled="loading"
+                :disabled="loading || offline"
               >
                 Create
               </v-btn>
@@ -60,7 +60,7 @@
           </v-card-text>
         </v-card>
       </v-form>
-      <SkeletonLoader v-if="!userdataLoaded" />
+      <SkeletonLoader />
     </v-col>
   </v-row>
 </template>
@@ -85,7 +85,7 @@ export default {
     title: 'Create Class',
   }),
   computed: {
-    ...mapState(['user', 'userdata', 'loaded', 'userdataLoaded']),
+    ...mapState(['user', 'userdata', 'loaded', 'userdataLoaded', 'offline']),
   },
   created() {
     this.$store.commit('title', 'Create Class')

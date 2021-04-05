@@ -1,7 +1,7 @@
 <template>
   <v-row v-if="loaded && user.email" justify="center" align="center">
-    <v-col cols="12" sm="8" md="6" class="my-4">
-      <v-card v-if="loaded && userdataLoaded" elevation="0">
+    <v-col cols="12" sm="10" md="8" class="my-4">
+      <v-card v-if="userdataLoaded" elevation="0">
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -17,9 +17,13 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-card v-if="loaded && userdataLoaded" class="my-4" outlined>
+      <v-card v-if="userdataLoaded" class="my-4" outlined>
         <v-card-title> Join Class </v-card-title>
         <v-card-subtitle> Input the class code </v-card-subtitle>
+        <v-divider v-if="!error" />
+        <v-card v-if="error" elevation="0" tile color="red" dark>
+          <v-card-text class="text-center" tile> {{ error }} </v-card-text>
+        </v-card>
         <v-form @submit.prevent="joinClass">
           <v-card-text>
             <v-text-field
@@ -33,7 +37,13 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn elevation="0" type="submit" color="primary">JOIN</v-btn>
+            <v-btn
+              :disabled="loading || offline"
+              elevation="0"
+              type="submit"
+              color="primary"
+              >JOIN</v-btn
+            >
           </v-card-actions>
         </v-form>
       </v-card>
@@ -52,6 +62,7 @@ export default {
   data: () => ({
     classCode: '',
     loading: false,
+    error: '',
   }),
   head() {
     return {
@@ -66,7 +77,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loaded', 'user', 'userdataLoaded']),
+    ...mapState(['loaded', 'user', 'userdataLoaded', 'offline']),
   },
   created() {
     this.$store.commit('title', 'Join Class')
@@ -75,12 +86,40 @@ export default {
     async joinClass() {
       await this.$fire.firestoreReady()
       this.loading = true
-      const docRef = this.$fire.firestore
+      this.error = ''
+      await this.$fire.firestore
         .collection('classes')
-        .doc(this.classCode)
-      const docData = await docRef.get()
-
-      console.log(docData)
+        .where('code', '==', this.classCode)
+        .onSnapshot((qs) => {
+          try {
+            if (qs.size === 1) {
+              qs.forEach((doc) => {
+                if (doc.exists) {
+                  const data = doc.data()
+                  if (
+                    data.creatorID === this.user.uid ||
+                    data.admins.includes(this.user.uid) ||
+                    data.moderators.includes(this.user.uid) ||
+                    data.pending.includes(this.user.uid) ||
+                    data.accepted.includes(this.user.uid)
+                  ) {
+                    this.$router.push(`/class/${this.classCode}`)
+                  } else {
+                    // doc.set({ xd: false }, { merge: true })
+                  }
+                } else {
+                  this.error = "Class doesn't exists"
+                }
+              })
+            } else {
+              this.error = 'Class not found'
+            }
+          } catch (e) {
+            console.log(e)
+            this.error = 'Failed to find your class, try again later'
+          }
+          this.loading = false
+        })
     },
   },
 }

@@ -1,8 +1,9 @@
 <template>
-  <v-row v-if="loaded && user.email" justify="center" align="center">
-    <v-col cols="12" sm="8" md="6" class="my-4">
+  <v-row justify="center" align="center">
+    <v-col cols="12" sm="10" md="8" class="my-4">
       <v-card elevation="0">
         <v-btn
+          v-if="userdataLoaded"
           elevation="0"
           class="mb-4"
           color="primary"
@@ -13,18 +14,20 @@
           Back to Classes
         </v-btn>
       </v-card>
-      <v-card outlined>
+      <v-card outlined class="mb-4">
         <v-card-title>{{ title }}</v-card-title>
-        <v-divider></v-divider>
-        <v-card-subtitle class="pb-0 pt-2 px-4">
-          <b>
-            <small> {{ date }} </small>
-          </b>
-          <br />
-          {{ description }}
+        <v-card-subtitle>
+          {{ date }} <b> . </b> {{ admins.length }} admins <b> . </b>
+          {{ moderators.length }} moderators
         </v-card-subtitle>
-        <v-card-actions class="px-4 pt-0">
-          <small style="color: gray"> <b> CODE: </b> {{ code }}</small>
+        <v-card-text>
+          {{ description }}
+        </v-card-text>
+      </v-card>
+      <v-card v-if="userdataLoaded" outlined class="mb-4">
+        <v-card-title> Class Code</v-card-title>
+        <v-card-text> {{ code }} </v-card-text>
+        <v-card-actions>
           <v-spacer />
           <v-btn
             v-clipboard:copy="code"
@@ -32,38 +35,44 @@
             v-clipboard:error="onError"
             elevation="0"
             color="success"
-            small
           >
             COPY
           </v-btn>
-          <v-snackbar
-            v-model="snackbar.show"
-            :timeout="snackbar.timeout"
-            :color="snackbar.color"
-            right
-            bottom
-          >
-            {{ snackbar.text }}
-
-            <template #action="{ attrs }">
-              <v-btn
-                color="white"
-                text
-                v-bind="attrs"
-                @click="snackbar.show = false"
-              >
-                Close
-              </v-btn>
-            </template>
-          </v-snackbar>
         </v-card-actions>
+        <v-snackbar
+          v-model="snackbar.show"
+          :timeout="snackbar.timeout"
+          :color="snackbar.color"
+          right
+          bottom
+        >
+          {{ snackbar.text }}
+
+          <template #action="{ attrs }">
+            <v-btn
+              color="white"
+              text
+              v-bind="attrs"
+              @click="snackbar.show = false"
+            >
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-card>
+
+      <SkeletonLoader />
     </v-col>
   </v-row>
 </template>
 <script>
 import { mapState } from 'vuex'
+import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
+  components: {
+    SkeletonLoader,
+  },
+  middleware: ['auth-only'],
   async asyncData({ $fire, route }) {
     let data = {
       error: '',
@@ -112,7 +121,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loaded', 'user']),
+    ...mapState(['loaded', 'user', 'userdataLoaded']),
   },
   methods: {
     onCopy(e) {

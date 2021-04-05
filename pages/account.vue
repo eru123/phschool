@@ -1,8 +1,8 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <SkeletonLoader v-if="!loaded || !userdataLoaded" />
-      <div v-if="userdataLoaded && loaded && user.email">
+    <v-col cols="12" sm="10" md="8">
+      <SkeletonLoader />
+      <div v-if="userdataLoaded && user.emailVerified">
         <DefaultPhoto />
         <v-card outlined class="my-4">
           <v-card-title>Edit Account Details</v-card-title>

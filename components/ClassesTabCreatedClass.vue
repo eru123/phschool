@@ -1,13 +1,17 @@
 <template>
   <v-card outlined class="my-4">
     <v-card-title> Created Class</v-card-title>
-    <v-card-subtitle class="pb-2">
+    <v-card-subtitle v-if="!loading" class="pb-2">
       Created {{ cc.length }} class <v-spacer />
-      <a v-if="!show" href="#" @click="show = true">Show</a>
-      <a v-if="show" href="#" @click="show = false">Hide</a>
+      <div v-if="cc.length > 0">
+        <a v-if="!show" href="#" @click="show = true">Show</a>
+        <a v-if="show" href="#" @click="show = false">Hide</a>
+      </div>
     </v-card-subtitle>
-    <v-divider v-if="show"></v-divider>
-    <v-list v-if="show" class="py-0">
+    <v-divider v-if="show && !loading"></v-divider>
+    <v-progress-linear v-if="loading" indeterminate color="cyan">
+    </v-progress-linear>
+    <v-list v-if="show && !loading" class="py-0">
       <v-list-item
         v-for="item in items"
         :key="item.code"
@@ -54,8 +58,9 @@ export default {
   data: () => ({
     cc: [],
     items: [],
-    show: true,
+    show: false,
     showAll: false,
+    loading: false,
   }),
   computed: {
     user() {
@@ -77,7 +82,7 @@ export default {
     async getAllCreatedClass() {
       await this.$fire.firestoreReady()
       let cc = []
-
+      this.loading = true
       this.$fire.firestore
         .collection('classes')
         .where('creatorId', '==', this.user.uid)
@@ -94,6 +99,8 @@ export default {
           } else {
             this.items = cc.slice(0, 5)
           }
+
+          this.loading = false
         })
     },
   },

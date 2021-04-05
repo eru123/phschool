@@ -12,15 +12,12 @@
       fixed
       app
     >
-      <v-app-bar-nav-icon
-        v-if="loaded && user.email"
-        @click.stop="drawer = !drawer"
-      />
+      <v-app-bar-nav-icon v-if="loaded" @click.stop="drawer = !drawer" />
       <v-toolbar-title v-if="loaded && user.email" v-text="title" />
       <v-toolbar-title v-if="loaded && !user.email" v-text="$config.title" />
       <v-spacer />
       <v-btn
-        v-if="loaded && userdataLoaded && user.email"
+        v-if="userdataLoaded && user.email"
         icon
         @click.stop="rightDrawer = !rightDrawer"
       >
@@ -43,10 +40,10 @@
       </v-container>
     </v-main>
     <v-navigation-drawer
-      v-if="user.email"
+      v-if="user.email && userdataLoaded"
       v-model="rightDrawer"
       right
-      temporary
+      clipped
       app
     >
       <RightMenu />
@@ -67,7 +64,6 @@
 </template>
 
 <script>
-import navigator from 'navigator'
 import { mapState } from 'vuex'
 import RightMenu from '~/components/NavDefaultRightMenu.vue'
 import LeftMenu from '~/components/NavDefaultLeftMenu.vue'
@@ -83,22 +79,29 @@ export default {
       drawer: null,
       fixed: false,
       miniVariant: false,
-      right: true,
       rightDrawer: false,
-      offline: false,
     }
   },
-
   computed: {
-    ...mapState(['title', 'user', 'loaded', 'userdata', 'userdataLoaded']),
+    ...mapState([
+      'title',
+      'user',
+      'loaded',
+      'userdata',
+      'userdataLoaded',
+      'offline',
+    ]),
   },
   async created() {
     await this.$fire.authReady()
     this.$store.commit('loaded', false)
     this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
+        this.$store.commit('loaded', false)
+        this.$store.commit('userdataLoaded', false)
         await this.$store.dispatch('user', user)
       } else {
+        this.$store.commit('userdataLoaded', true)
         this.$store.commit('user', {
           uid: null,
           email: null,
@@ -109,13 +112,7 @@ export default {
     })
 
     if (process.client) {
-      this.offline = navigator.offline
-      addEventListener('offline', () => {
-        this.offline = true
-      })
-      addEventListener('online', () => {
-        this.offline = false
-      })
+      this.$store.dispatch('offline')
     }
   },
 }

@@ -14,6 +14,7 @@ export const state = () => ({
     defaultPhoto: null,
   },
   userdataLoaded: false,
+  offline: false,
 })
 
 export const mutations = {
@@ -37,6 +38,9 @@ export const mutations = {
   userdataLoaded(state, value) {
     state.userdataLoaded = Boolean(value)
   },
+  offline(state, value) {
+    state.offline = Boolean(value)
+  },
 }
 
 export const actions = {
@@ -55,6 +59,7 @@ export const actions = {
         defaultPhoto: null,
       },
       userdataLoaded: false,
+      offline: false,
     }
 
     commit('user', defaultState.user)
@@ -67,8 +72,6 @@ export const actions = {
   },
   async logout() {},
   async userdata({ commit, state }, { uid }) {
-    commit('userdataLoaded', false)
-
     if (uid) {
       await this.$fire.firestoreReady()
 
@@ -77,44 +80,75 @@ export const actions = {
       let data = state.userdata
       data.uid = uid
 
-      this.$fire.firestore
+      await this.$fire.firestore
         .collection('users')
         .where('uid', '==', uid)
-        .onSnapshot((querySnapshot) => {
-          querySnapshot.forEach(async (doc) => {
-            if (!doc.exists) {
-              await docRef.set(data).then(() => {
+        .onSnapshot(async (querySnapshot) => {
+          if (querySnapshot.size < 1) {
+            await docRef
+              .set(data)
+              .then(() => {
                 data.defaultPhoto = null
                 commit('userdata', data)
+              })
+              .catch(() => {
+                commit('userdata', data)
+              })
+              .finally(() => {
                 commit('userdataLoaded', true)
               })
-            } else {
-              data = doc.data()
-              if (data.defaultPhoto) {
-                await this.$fire.storageReady()
-                await this.$fire.storage
-                  .ref(data.defaultPhoto)
-                  .getDownloadURL()
-                  .then((url) => {
-                    data.defaultPhoto = url
+          } else {
+            querySnapshot.forEach(async (doc) => {
+              if (!doc.exists) {
+                await docRef
+                  .set(data)
+                  .then(() => {
+                    data.defaultPhoto = null
+                    commit('userdata', data)
                   })
                   .catch(() => {
-                    data.defaultPhoto = null
+                    commit('userdata', data)
                   })
                   .finally(() => {
-                    commit('userdata', data)
                     commit('userdataLoaded', true)
                   })
               } else {
-                data.defaultPhoto = null
-                commit('userdata', data)
-                commit('userdataLoaded', true)
+                data = doc.data()
+                if (data.defaultPhoto) {
+                  await this.$fire.storageReady()
+                  await this.$fire.storage
+                    .ref(data.defaultPhoto)
+                    .getDownloadURL()
+                    .then((url) => {
+                      data.defaultPhoto = url
+                    })
+                    .catch(() => {
+                      data.defaultPhoto = null
+                    })
+                    .finally(() => {
+                      commit('userdata', data)
+                      commit('userdataLoaded', true)
+                    })
+                } else {
+                  data.defaultPhoto = null
+                  commit('userdata', data)
+                  commit('userdataLoaded', true)
+                }
               }
-            }
-          })
+            })
+          }
         })
     } else {
       commit('userdataLoaded', true)
     }
+  },
+  offline({ commit }) {
+    commit('offline', navigator.offline)
+    addEventListener('offline', () => {
+      commit('offline', true)
+    })
+    addEventListener('online', () => {
+      commit('offline', false)
+    })
   },
 }

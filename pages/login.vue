@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="5" md="4">
       <v-card v-if="loaded" elevation="0">
         <v-card-text>
           <v-form @submit.prevent="login">
@@ -38,7 +38,7 @@
                 elevation="0"
                 large
                 :loading="loading"
-                :disabled="loading"
+                :disabled="loading || offline"
               >
                 Login
               </v-btn>
@@ -74,10 +74,9 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-  layout(context) {
-    return 'plain'
-  },
+  layout: 'plain',
   middleware: ['nonauth-only'],
   data: () => ({
     email: '',
@@ -91,12 +90,15 @@ export default {
   head: () => ({
     title: 'Login',
   }),
+  computed: {
+    ...mapState(['offline']),
+  },
   async created() {
     await this.$fire.authReady()
 
-    this.$fire.auth.onAuthStateChanged((user) => {
+    this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        this.$store.commit('user', user)
+        await this.$store.dispatch('user', user)
         if (this.$router.currentRoute.query.redirect) {
           this.$router.push(this.$router.currentRoute.query.redirect)
         } else {
@@ -116,9 +118,6 @@ export default {
       await this.$fire.authReady()
       await this.$fire.auth
         .signInWithEmailAndPassword(this.email, this.pass)
-        .then((user) => {
-          this.$store.commit('user', user)
-        })
         .catch((error) => {
           this.error = true
           this.message = error.message

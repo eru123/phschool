@@ -25,6 +25,9 @@
           </v-row>
         </template>
       </v-img>
+      <v-icon v-if="!userdata.defaultPhoto" size="200"
+        >mdi-account-circle</v-icon
+      >
       <v-card-actions>
         <v-spacer />
         <v-dialog v-model="dialog" persistent width="500">

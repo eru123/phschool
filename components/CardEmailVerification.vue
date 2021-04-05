@@ -1,29 +1,42 @@
 <template>
-  <v-card outlined elevation="0" class="my-4">
+  <v-card
+    v-if="loaded && user.email && !user.emailVerified"
+    outlined
+    elevation="0"
+    class="my-4"
+  >
     <v-card-title>Email Verification</v-card-title>
     <v-card-text>
       To use the app, you must verify that your email is
       {{ user.email }}
-      <v-card v-if="emailSent" color="info" class="mt-4" dark>
-        <v-card-title>Email Sent</v-card-title>
-        <v-card-text>
-          The verification link was sent to your email, open that link and click
-          the <b>verify</b> button below
-        </v-card-text>
-      </v-card>
-      <v-card v-if="emailSentError" color="red" class="mt-4" dark>
-        <v-card-title>Email Verification Failed</v-card-title>
-        <v-card-text>
-          {{ emailSentError }}
-        </v-card-text>
-      </v-card>
-      <v-card v-if="verifyError" color="red" class="mt-4" dark>
-        <v-card-title>Verification Failed</v-card-title>
-        <v-card-text>
-          {{ verifyError }}
-        </v-card-text>
-      </v-card>
     </v-card-text>
+    <v-card v-if="emailSent" tile elevation="0" color="info" class="mb-4" dark>
+      <v-card-title>Email Sent</v-card-title>
+      <v-card-text>
+        The verification link was sent to your email, open that link and click
+        the <b>verify</b> button below
+      </v-card-text>
+    </v-card>
+    <v-card
+      v-if="emailSentError"
+      tile
+      elevation="0"
+      color="red"
+      class="mb-4"
+      dark
+    >
+      <v-card-title>Email Verification Failed</v-card-title>
+      <v-card-text>
+        {{ emailSentError }}
+      </v-card-text>
+    </v-card>
+    <v-card v-if="verifyError" tile elevation="0" color="red" class="mb-4" dark>
+      <v-card-title>Verification Failed</v-card-title>
+      <v-card-text>
+        {{ verifyError }}
+      </v-card-text>
+    </v-card>
+
     <v-card-actions>
       <v-spacer />
       <v-btn
@@ -33,7 +46,7 @@
         elevation="0"
         @click="resend"
       >
-        Resend
+        Send link
       </v-btn>
       <v-btn
         color="success"
@@ -48,6 +61,7 @@
   </v-card>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     timestamp: null,
@@ -60,9 +74,7 @@ export default {
     emailSentError: '',
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
+    ...mapState(['user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   methods: {
     resend() {

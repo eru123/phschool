@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="5" md="4">
       <v-card v-if="loaded" elevation="0">
         <v-card-text>
           <v-form @submit.prevent="login">
@@ -74,9 +74,7 @@
 </template>
 <script>
 export default {
-  layout(context) {
-    return 'plain'
-  },
+  layout: 'plain',
   middleware: ['nonauth-only'],
   data: () => ({
     email: '',
@@ -94,9 +92,9 @@ export default {
   async created() {
     await this.$fire.authReady()
 
-    this.$fire.auth.onAuthStateChanged((user) => {
+    this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        this.$store.commit('user', user)
+        await this.$store.dispatch('user', user)
         this.$router.push({ name: 'index' })
       } else {
         this.$store.commit('title', 'Register')
@@ -112,9 +110,6 @@ export default {
         this.loading = true
         this.$fire.auth
           .createUserWithEmailAndPassword(this.email, this.pass)
-          .then((user) => {
-            this.$store.commit('user', user)
-          })
           .catch((error) => {
             this.error = true
             this.message = error.message

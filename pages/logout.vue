@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="6" md="8">
+    <v-col cols="12" sm="10" md="8">
       <v-card elevation="0">
         <v-card-title>
           <v-spacer />
@@ -41,6 +41,7 @@
 <script>
 import Cookies from 'js-cookie'
 export default {
+  layout: 'plain',
   middleware: ['auth-only'],
   data: () => ({
     message: '',
@@ -50,30 +51,21 @@ export default {
   head: () => ({
     title: 'Logout',
   }),
-  async created() {
+  created() {
     this.$store.commit('title', 'Logout')
-    await this.$fire.authReady()
-    this.$fire.auth.onAuthStateChanged((user) => {
-      if (!user) {
-        this.$store.commit('user', {
-          uid: null,
-          email: null,
-          emailVerified: null,
-        })
-        this.$router.push({ name: 'login' })
-      }
-    })
   },
   methods: {
     async logout() {
       this.message = ''
       this.error = false
       this.loading = true
+      await this.$fire.authReady()
       await this.$fire.auth
         .signOut()
         .then(() => {
           this.$store.dispatch('resetStoreState')
           Cookies.remove('access_token')
+          this.$router.push({ name: 'login' })
         })
         .catch((error) => {
           this.error = true

@@ -1,17 +1,13 @@
 <template>
   <div>
-    <v-row v-if="loaded && user.email" justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
-        <EmailVerification v-if="!user.emailVerified" />
-        <ChangeName
-          v-if="
-            loaded && user.emailVerified && userdataLoaded && !userdata.name
-          "
-        />
+    <v-row v-if="loaded && userdataLoaded" justify="center" align="center">
+      <v-col cols="12" sm="10" md="8">
+        <EmailVerification />
+        <ChangeName />
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="10" md="8">
         <WelcomeTester />
         <SkeletonLoader />
       </v-col>

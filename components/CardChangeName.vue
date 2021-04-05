@@ -1,5 +1,10 @@
 <template>
-  <v-card outlined elevation="0" class="my-4">
+  <v-card
+    v-if="userdataLoaded && user.email && user.emailVerified && !userdata.name"
+    outlined
+    elevation="0"
+    class="my-4"
+  >
     <v-card-title>Name is required</v-card-title>
     <v-card-text>
       <p>
@@ -23,7 +28,7 @@
             elevation="0"
             @click="changeName"
           >
-            Change
+            Save Name
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -31,6 +36,7 @@
   </v-card>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     name: '',
@@ -38,29 +44,20 @@ export default {
     error: null,
   }),
   computed: {
-    user() {
-      return this.$store.state.user
-    },
-    userdata() {
-      return this.$store.state.userdata
-    },
+    ...mapState(['user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   methods: {
     async changeName() {
       if (this.name.length > 0) {
-        if (confirm(`Your name is ${this.name}?`)) {
-          this.loading = true
-          await this.$fire.firestoreReady()
-          const ref = this.$fire.firestore
-            .collection('users')
-            .doc(this.user.uid)
-          const doc = await ref.get()
+        this.loading = true
+        await this.$fire.firestoreReady()
+        const ref = this.$fire.firestore.collection('users').doc(this.user.uid)
+        const doc = await ref.get()
 
-          const data = await doc.data()
-          data.name = this.name
-          await ref.set(data).then(() => this.$store.commit('userdata', data))
-          this.loading = false
-        }
+        const data = await doc.data()
+        data.name = this.name
+        await ref.set(data).then(() => this.$store.commit('userdata', data))
+        this.loading = false
       } else {
         this.error = 'Invalid name'
       }
