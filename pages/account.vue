@@ -6,6 +6,7 @@
         <DefaultPhoto />
         <v-card outlined class="my-4">
           <v-card-title>Edit Account Details</v-card-title>
+          <v-divider></v-divider>
           <v-form @submit.prevent="saveDetails">
             <v-card-text>
               <v-text-field v-model="details.name" label="Name" />

@@ -66,6 +66,7 @@ export default {
   server: {
     host: '0.0.0.0',
   },
+  serverMiddleware: ['~/api/index'],
   css: [],
   plugins: [
     '~/plugins/firebase.js',
@@ -162,7 +163,6 @@ export default {
         },
       },
     },
-    transpile: [],
   },
   loading: {
     color: '#29B6F6',

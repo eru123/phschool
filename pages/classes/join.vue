@@ -42,8 +42,9 @@
               elevation="0"
               type="submit"
               color="primary"
-              >JOIN</v-btn
             >
+              JOIN
+            </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -93,19 +94,71 @@ export default {
         .onSnapshot((qs) => {
           try {
             if (qs.size === 1) {
-              qs.forEach((doc) => {
+              qs.forEach(async (doc) => {
                 if (doc.exists) {
                   const data = doc.data()
-                  if (
-                    data.creatorID === this.user.uid ||
-                    data.admins.includes(this.user.uid) ||
-                    data.moderators.includes(this.user.uid) ||
-                    data.pending.includes(this.user.uid) ||
-                    data.accepted.includes(this.user.uid)
-                  ) {
+                  if (data.creatorID === this.user.uid) {
                     this.$router.push(`/class/${this.classCode}`)
                   } else {
-                    // doc.set({ xd: false }, { merge: true })
+                    await this.$fire.firestore
+                      .collection('classes')
+                      .doc(this.classCode)
+                      .collection('members')
+                      .where('uid', '==', this.user.uid)
+                      .onSnapshot(async (qz) => {
+                        try {
+                          if (qz.size === 1) {
+                            await this.$fire.firestore
+                              .collection('users')
+                              .doc(this.user.uid)
+                              .collection('jclass')
+                              .doc(this.classCode)
+                              .set({ code: this.classCode }, { merge: true })
+                            this.$router.push(`/class/${this.classCode}`)
+                          } else if (qz.size < 1 && data.public) {
+                            await this.$fire.firestore
+                              .collection('classes')
+                              .doc(this.classCode)
+                              .collection('members')
+                              .doc(this.user.uid)
+                              .set({ uid: this.user.uid, status: 'accepted' })
+                              .then(async () => {
+                                await this.$fire.firestore
+                                  .collection('users')
+                                  .doc(this.user.uid)
+                                  .collection('jclass')
+                                  .doc(this.classCode)
+                                  .set(
+                                    { code: this.classCode },
+                                    { merge: true }
+                                  )
+                                this.$router.push(`/class/${this.classCode}`)
+                              })
+                          } else if (qz.size < 1 && !data.public) {
+                            await this.$fire.firestore
+                              .collection('classes')
+                              .doc(this.classCode)
+                              .collection('members')
+                              .doc(this.user.uid)
+                              .set({ uid: this.user.uid, status: 'pending' })
+                              .then(async () => {
+                                await this.$fire.firestore
+                                  .collection('users')
+                                  .doc(this.user.uid)
+                                  .collection('jclass')
+                                  .doc(this.classCode)
+                                  .set(
+                                    { code: this.classCode },
+                                    { merge: true }
+                                  )
+                                this.$router.push(`/class/${this.classCode}`)
+                                this.$router.push(`/class/${this.classCode}`)
+                              })
+                          } else throw new Error(' >> I Love You <3 << ')
+                        } catch {
+                          this.error = 'Failed to join the class'
+                        }
+                      })
                   }
                 } else {
                   this.error = "Class doesn't exists"

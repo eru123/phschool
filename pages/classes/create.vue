@@ -20,6 +20,8 @@
       <v-form v-if="userdataLoaded" @submit.prevent="createClass">
         <v-card class="my-4" outlined>
           <v-card-title>Create Class</v-card-title>
+          <v-card-subtitle>Create and Manage your own class</v-card-subtitle>
+          <v-divider />
           <v-card-text>
             <v-text-field
               v-model="name"
@@ -35,6 +37,7 @@
               label="Class Description"
               autocomplete="off"
               minlength="4000"
+              rows="1"
             />
             <v-checkbox
               v-model="isPublicClass"
@@ -117,10 +120,6 @@ export default {
         public: isPublicClass,
         creatorId: user.uid,
         creatorName: userdata.name,
-        admins: [user.uid],
-        moderators: [],
-        pending: [],
-        accepted: [],
         timestamp: dateNow,
         color,
         date: `${

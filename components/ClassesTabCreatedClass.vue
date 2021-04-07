@@ -16,11 +16,17 @@
         v-for="item in items"
         :key="item.code"
         :to="`/class/${item.code}`"
+        :title="`${item.public ? 'Public' : 'Private'} Class . ${item.date}`"
       >
+        <v-list-item-icon class="mr-4">
+          <v-icon v-if="item.public" color="grey darken-4"> mdi-earth </v-icon>
+          <v-icon v-if="!item.public" color="grey darken-4">
+            mdi-account-lock
+          </v-icon>
+        </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>
             {{ item.title }}
-            <small style="color: gray"> - {{ item.date }} </small>
           </v-list-item-title>
           <v-list-item-subtitle> {{ item.description }} </v-list-item-subtitle>
         </v-list-item-content>

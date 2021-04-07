@@ -1,6 +1,7 @@
 <template>
   <v-card outlined class="my-4">
     <v-card-title>Default Photo</v-card-title>
+    <v-divider></v-divider>
     <v-card-text class="text-center">
       <v-img
         v-if="userdata.defaultPhoto"
@@ -25,9 +26,9 @@
           </v-row>
         </template>
       </v-img>
-      <v-icon v-if="!userdata.defaultPhoto" size="200"
-        >mdi-account-circle</v-icon
-      >
+      <v-icon v-if="!userdata.defaultPhoto" size="200">
+        mdi-account-circle
+      </v-icon>
       <v-card-actions>
         <v-spacer />
         <v-dialog v-model="dialog" persistent width="500">
@@ -38,13 +39,14 @@
           </template>
           <v-card>
             <v-card-title> Upload Profile Picture </v-card-title>
-            <v-card-text class="text-center">
+            <v-divider />
+            <v-card-text class="text-center mt-4">
               <div class="text-center">
                 <v-img
                   v-if="img1 != null"
                   :src="img1"
-                  max-height="200"
-                  max-width="200"
+                  height="200"
+                  width="200"
                   style="
                     margin: 1em auto;
                     border: 1px solid #ccc;

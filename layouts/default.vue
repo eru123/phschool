@@ -13,8 +13,16 @@
       app
     >
       <v-app-bar-nav-icon v-if="loaded" @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-if="loaded && user.email" v-text="title" />
-      <v-toolbar-title v-if="loaded && !user.email" v-text="$config.title" />
+      <v-toolbar-title
+        v-if="loaded && user.email"
+        class="ml-1"
+        v-text="title"
+      />
+      <v-toolbar-title
+        v-if="loaded && !user.email"
+        class="ml-1"
+        v-text="$config.title"
+      />
       <v-spacer />
       <v-btn
         v-if="userdataLoaded && user.email"

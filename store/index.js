@@ -15,12 +15,16 @@ export const state = () => ({
   },
   userdataLoaded: false,
   offline: false,
+  preload: [],
 })
 
 export const mutations = {
   user(state, obj) {
     const { uid, email, emailVerified } = obj
     state.user = { uid, email, emailVerified }
+  },
+  preload(state, item) {
+    state.preload.push(item)
   },
   title(state, title) {
     state.title = title
@@ -44,6 +48,21 @@ export const mutations = {
 }
 
 export const actions = {
+  preloadImage({ commit, state }, src) {
+    const tmp = new Image()
+    tmp.src = src
+    let existsAlready = false
+    state.preload.forEach((e) => {
+      try {
+        if (e.src === src) {
+          existsAlready = true
+        }
+      } catch {
+        //
+      }
+    })
+    if (!existsAlready) commit('preload', tmp)
+  },
   resetStoreState({ commit }) {
     const defaultState = {
       title: 'Every Juan',
@@ -71,7 +90,7 @@ export const actions = {
     await dispatch('userdata', user)
   },
   async logout() {},
-  async userdata({ commit, state }, { uid }) {
+  async userdata({ commit, dispatch, state }, { uid }) {
     if (uid) {
       await this.$fire.firestoreReady()
 
@@ -121,6 +140,7 @@ export const actions = {
                     .getDownloadURL()
                     .then((url) => {
                       data.defaultPhoto = url
+                      dispatch('preloadImage', url)
                     })
                     .catch(() => {
                       data.defaultPhoto = null

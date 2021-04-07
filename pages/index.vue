@@ -27,14 +27,14 @@ export default {
     SkeletonLoader,
     WelcomeTester,
   },
-  head: () => ({
-    title: 'Home',
+  head: ({ $config }) => ({
+    title: $config.title,
   }),
   computed: {
     ...mapState(['user', 'loaded', 'userdata', 'userdataLoaded']),
   },
   created() {
-    this.$store.commit('title', 'Home')
+    this.$store.commit('title', this.$config.title)
   },
 }
 </script>
