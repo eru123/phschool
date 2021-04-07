@@ -72,9 +72,13 @@ export default {
     '~/plugins/firebase.js',
     '~/plugins/school.js',
     '~/plugins/vue-clipboard2.js',
+    '~/plugins/vuetify.js',
   ],
   components: true,
-  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
+  buildModules: [
+    '@nuxtjs/eslint-module',
+    // '@nuxtjs/vuetify'
+  ],
   modules: ['@nuxtjs/axios', '@nuxtjs/pwa', '@nuxtjs/firebase'],
   axios: {},
   pwa: {
@@ -94,10 +98,10 @@ export default {
       useWebmanifestExtension: false,
     },
   },
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: {},
-  },
+  // vuetify: {
+  //   customVariables: ['~/assets/variables.scss'],
+  //   theme: {},
+  // },
   env: {
     VUE_APP_FIREBASE_APIKEY: process.env.VUE_APP_FIREBASE_APIKEY,
     VUE_APP_FIREBASE_AUTHDOMAIN: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
