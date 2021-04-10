@@ -110,41 +110,43 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 import EditClass from '~/components/ClassEditDialog.vue'
 import ClassMembers from '~/components/ClassMembersDialog.vue'
 export default {
   components: {
-    SkeletonLoader,
     EditClass,
     ClassMembers,
   },
-  middleware: ['auth-only'],
+  // middleware: ['auth-only'],
   async asyncData({ $fire, route }) {
-    let data = {
-      error: '',
-      title: '',
-      description: '',
-    }
-    try {
-      const code = route.params.code
-      await $fire.firestoreReady()
-      const db = $fire.firestore
-      const docRef = db.collection('classes').doc(code)
-      return await docRef.get().then((doc) => {
-        if (doc.exists) {
-          const docData = doc.data()
-          data = { ...docData, error: data.error }
-        } else {
-          data.error = 'Class not found'
-        }
-        return { ...data }
-      })
-    } catch {
-      data.error = 'Failed to retrieve data'
-    }
+    if (process.server) {
+      let data = {
+        error: '',
+        title: '',
+        description: '',
+      }
+      try {
+        const code = route.params.code
+        await $fire.firestoreReady()
+        const db = $fire.firestore
+        const docRef = db.collection('classes').doc(code)
+        return await docRef.get().then((doc) => {
+          if (doc.exists) {
+            const docData = doc.data()
+            data = { ...docData, error: data.error }
+          } else {
+            data.error = 'Class not found'
+          }
+          return { ...data }
+        })
+      } catch {
+        data.error = 'Failed to retrieve data'
+      }
 
-    return { ...data }
+      return { ...data }
+    } else if (process.client) {
+      return { loading: true }
+    }
   },
   data: () => ({
     snackbar: {
@@ -157,6 +159,10 @@ export default {
     pending: [],
     accepted: [],
     moderators: [],
+    error: '',
+    title: '',
+    description: '',
+    code: '',
   }),
   head() {
     return {
@@ -174,6 +180,36 @@ export default {
     ...mapState(['loaded', 'user', 'userdataLoaded']),
   },
   async created() {
+    if (process.client) {
+      let data = {
+        error: '',
+        title: '',
+        description: '',
+        code: '',
+      }
+      try {
+        const code = this.route.params.code
+        await this.$fire.firestoreReady()
+        const db = this.$fire.firestore
+        const docRef = db.collection('classes').doc(code)
+        return await docRef.get().then((doc) => {
+          if (doc.exists) {
+            const docData = doc.data()
+            data = { ...docData, error: data.error }
+          } else {
+            data.error = 'Class not found'
+          }
+          return { ...data }
+        })
+      } catch {
+        data.error = 'Failed to retrieve data'
+      }
+
+      this.error = data.error
+      this.title = data.title
+      this.description = data.description
+      this.code = data.code
+    }
     if (!this.error) {
       await this.$fire.firestoreReady()
       this.admins = await this.getMembers('admins')
