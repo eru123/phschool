@@ -70,11 +70,7 @@
 <script>
 import { v1 as uuid } from 'uuid'
 import { mapState } from 'vuex'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
-  components: {
-    SkeletonLoader,
-  },
   middleware: ['auth-only'],
   data: () => ({
     loading: false,

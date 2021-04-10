@@ -18,13 +18,11 @@
 import { mapState } from 'vuex'
 import EmailVerification from '~/components/CardEmailVerification.vue'
 import ChangeName from '~/components/CardChangeName.vue'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 import WelcomeTester from '~/components/CardWelcomeTester.vue'
 export default {
   components: {
     EmailVerification,
     ChangeName,
-    SkeletonLoader,
     WelcomeTester,
   },
   head: ({ $config }) => ({

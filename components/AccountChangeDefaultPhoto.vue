@@ -176,6 +176,7 @@ export default {
       }
     },
     async onUpload() {
+      this.error = ''
       this.img1 = null
       this.uploadValue = 1
       this.loading = true

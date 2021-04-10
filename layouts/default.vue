@@ -103,6 +103,9 @@ export default {
   async created() {
     await this.$fire.authReady()
     this.$store.commit('loaded', false)
+
+    console.log(this.$fire.auth.currentUser)
+
     this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
         this.$store.commit('loaded', false)

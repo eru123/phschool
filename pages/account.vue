@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="10" md="8">
-      <SkeletonLoader />
+      <skeleton-loader />
       <div v-if="userdataLoaded && user.emailVerified">
         <DefaultPhoto />
         <v-card outlined class="my-4">
@@ -45,10 +45,8 @@
 <script>
 import { mapState } from 'vuex'
 import DefaultPhoto from '~/components/AccountChangeDefaultPhoto.vue'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
-    SkeletonLoader,
     DefaultPhoto,
   },
   middleware: ['auth-only'],

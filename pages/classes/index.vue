@@ -24,12 +24,10 @@
 import { mapState } from 'vuex'
 import CreatedClass from '~/components/ClassesTabCreatedClass.vue'
 import JoinedClass from '~/components/ClassesTabJoinedClass.vue'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
   components: {
     CreatedClass,
     JoinedClass,
-    SkeletonLoader,
   },
   middleware: ['auth-only'],
   head: () => ({

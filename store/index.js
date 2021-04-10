@@ -58,7 +58,7 @@ export const actions = {
           existsAlready = true
         }
       } catch {
-        //
+        // intentional empty block
       }
     })
     if (!existsAlready) commit('preload', tmp)
@@ -87,77 +87,121 @@ export const actions = {
   },
   async user({ commit, dispatch }, user) {
     commit('user', user)
+    console.log(user)
     await dispatch('userdata', user)
   },
   async logout() {},
   async userdata({ commit, dispatch, state }, { uid }) {
+    console.log(uid)
     if (uid) {
       await this.$fire.firestoreReady()
 
       const docRef = this.$fire.firestore.collection('users').doc(uid)
-
       let data = state.userdata
       data.uid = uid
 
-      await this.$fire.firestore
-        .collection('users')
-        .where('uid', '==', uid)
-        .onSnapshot(async (querySnapshot) => {
-          if (querySnapshot.size < 1) {
-            await docRef
-              .set(data)
-              .then(() => {
-                data.defaultPhoto = null
-                commit('userdata', data)
+      docRef.onSnapshot(async (doc) => {
+        if (!doc.exists) {
+          await docRef.set(data)
+          commit('userdata', data)
+        } else {
+          data = doc.data()
+
+          if (data.defaultPhoto) {
+            await this.$fire.storageReady()
+            await this.$fire.storage
+              .ref(data.defaultPhoto)
+              .getDownloadURL()
+              .then((url) => {
+                data.defaultPhoto = url
+                dispatch('preloadImage', url)
               })
               .catch(() => {
-                commit('userdata', data)
+                data.defaultPhoto = null
               })
               .finally(() => {
-                commit('userdataLoaded', true)
+                console.log('image loaded')
+                commit('userdata', data)
               })
           } else {
-            querySnapshot.forEach(async (doc) => {
-              if (!doc.exists) {
-                await docRef
-                  .set(data)
-                  .then(() => {
-                    data.defaultPhoto = null
-                    commit('userdata', data)
-                  })
-                  .catch(() => {
-                    commit('userdata', data)
-                  })
-                  .finally(() => {
-                    commit('userdataLoaded', true)
-                  })
-              } else {
-                data = doc.data()
-                if (data.defaultPhoto) {
-                  await this.$fire.storageReady()
-                  await this.$fire.storage
-                    .ref(data.defaultPhoto)
-                    .getDownloadURL()
-                    .then((url) => {
-                      data.defaultPhoto = url
-                      dispatch('preloadImage', url)
-                    })
-                    .catch(() => {
-                      data.defaultPhoto = null
-                    })
-                    .finally(() => {
-                      commit('userdata', data)
-                      commit('userdataLoaded', true)
-                    })
-                } else {
-                  data.defaultPhoto = null
-                  commit('userdata', data)
-                  commit('userdataLoaded', true)
-                }
-              }
-            })
+            commit('userdata', data)
           }
-        })
+        }
+        commit('userdataLoaded', true)
+      })
+
+      // await this.$fire.firestore
+      //   .collection('users')
+      //   .where('uid', '==', uid)
+      //   .onSnapshot(async (querySnapshot) => {
+      //     console.log('[DEBUG]userdata_A')
+
+      //     if (querySnapshot.size < 1) {
+      //       await docRef
+      //         .set(data)
+      //         .then(() => {
+      //           data.defaultPhoto = null
+      //           commit('userdata', data)
+      //         })
+      //         .catch(() => {
+      //           commit('userdata', data)
+      //         })
+      //         .finally(() => {
+      //           commit('userdataLoaded', true)
+      //           console.log('[DEBUG]userdata_B')
+      //         })
+      //     } else {
+      //       querySnapshot.forEach(async (doc) => {
+      //         console.log('[DEBUG]userdata_C')
+
+      //         if (!doc.exists) {
+      //           await docRef
+      //             .set(data)
+      //             .then(() => {
+      //               data.defaultPhoto = null
+      //               commit('userdata', data)
+      //             })
+      //             .catch(() => {
+      //               commit('userdata', data)
+      //             })
+      //             .finally(() => {
+      //               console.log('[DEBUG]userdata_D')
+
+      //               commit('userdataLoaded', true)
+      //             })
+      //         } else {
+      //           data = doc.data()
+      //           if (data.defaultPhoto) {
+      //             console.log('[DEBUG]userdata_E')
+
+      //             await this.$fire.storageReady()
+      //             await this.$fire.storage
+      //               .ref(data.defaultPhoto)
+      //               .getDownloadURL()
+      //               .then((url) => {
+      //                 data.defaultPhoto = url
+      //                 dispatch('preloadImage', url)
+      //               })
+      //               .catch(() => {
+      //                 data.defaultPhoto = null
+      //               })
+      //               .finally(() => {
+      //                 commit('userdata', data)
+      //                 commit('userdataLoaded', true)
+      //                 console.log('[DEBUG]userdata_F')
+      //               })
+      //           } else {
+      //             data.defaultPhoto = null
+      //             commit('userdata', data)
+      //             commit('userdataLoaded', true)
+      //             console.log('[DEBUG]userdata_G')
+      //           }
+      //         }
+      //       })
+      //     }
+      //   })
+
+      // commit('userdataLoaded', true)
     } else {
       commit('userdataLoaded', true)
     }

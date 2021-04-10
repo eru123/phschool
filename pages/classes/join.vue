@@ -48,17 +48,13 @@
           </v-card-actions>
         </v-form>
       </v-card>
-      <SkeletonLoader />
+      <skeleton-loader />
     </v-col>
   </v-row>
 </template>
 <script>
 import { mapState } from 'vuex'
-import SkeletonLoader from '~/components/SkeletonLoader.vue'
 export default {
-  components: {
-    SkeletonLoader,
-  },
   middleware: ['auth-only'],
   data: () => ({
     classCode: '',

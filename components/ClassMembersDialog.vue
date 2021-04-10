@@ -111,7 +111,6 @@ export default {
     await this.getData('pending')
     await this.getData('admins')
     await this.getData('moderators')
-    this.test()
   },
   methods: {
     async getData(field) {
@@ -144,9 +143,6 @@ export default {
           this.members[field] = tmp
           this.loading = false
         })
-    },
-    test() {
-      console.log(this.members.key())
     },
     upr() {
       this.currentItemsCount = this.members[this.selectedStatus].length || 0

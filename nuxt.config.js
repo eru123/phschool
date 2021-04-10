@@ -73,6 +73,7 @@ export default {
     '~/plugins/school.js',
     '~/plugins/vue-clipboard2.js',
     '~/plugins/vuetify.js',
+    '~/plugins/global-components.js',
   ],
   components: true,
   buildModules: ['@nuxtjs/eslint-module'],
@@ -120,25 +121,25 @@ export default {
     services: {
       auth: true,
       // auth: {
-      //   persistence: 'local', // default
-      //   initialize: {
-      //     onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
-      //     onAuthStateChangedAction: 'onAuthStateChangedAction',
-      //     subscribeManually: false,
-      //   },
-      //   ssr: {
-      //     credential: true,
-      //     serverLogin: true,
-      //   },
-      // emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
-      // emulatorHost:
-      //   process.env.NODE_ENV === 'development'
-      //     ? 'http://localhost'
-      //     : undefined,
+      // persistence: 'local', // default
+      // initialize: {
+      //   onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+      //   onAuthStateChangedAction: 'onAuthStateChangedAction',
+      //   subscribeManually: false,
+      // },
+      // ssr: {
+      //   credential: true,
+      //   serverLogin: true,
+      // },
+      //   emulatorPort: process.env.NODE_ENV === 'development' ? 9099 : undefined,
+      //   emulatorHost:
+      //     process.env.NODE_ENV === 'development'
+      //       ? 'http://localhost'
+      //       : undefined,
       // },
       firestore: true,
       // firestore: {
-      //   emulatorPort: process.env.NODE_ENV === 'development' ? 8040 : undefined,
+      //   emulatorPort: process.env.NODE_ENV === 'development' ? 8080 : undefined,
       //   emulatorHost:
       //     process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
       // },
