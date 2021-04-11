@@ -87,12 +87,10 @@ export const actions = {
   },
   async user({ commit, dispatch }, user) {
     commit('user', user)
-    console.log(user)
     await dispatch('userdata', user)
   },
   async logout() {},
   async userdata({ commit, dispatch, state }, { uid }) {
-    console.log(uid)
     if (uid) {
       await this.$fire.firestoreReady()
 
@@ -120,7 +118,6 @@ export const actions = {
                 data.defaultPhoto = null
               })
               .finally(() => {
-                console.log('image loaded')
                 commit('userdata', data)
               })
           } else {

@@ -14,28 +14,70 @@
             Classes
           </v-btn>
           <v-spacer />
-          <ClassMembers :code="{ code, creatorId }" />
-          <EditClass />
+          <ClassMembers v-if="userdataLoaded" :code="{ code, creatorId }" />
+          <EditClass v-if="userdataLoaded" />
         </v-card-actions>
       </v-card>
-      <v-card outlined class="mb-4">
-        <v-card-title>{{ title }}</v-card-title>
+      <v-card v-if="userdataLoaded" outlined class="mb-4">
+        <v-card-title>
+          {{ title }}
+          <div class="ml-2 text-small">
+            <span v-if="pending.includes(user.uid)">PENDING</span>
+            <span v-if="accepted.includes(user.uid)">ACCEPTED</span>
+            <span v-if="admins.includes(user.uid)">ADMIN</span>
+            <span v-if="moderators.includes(user.uid)">MODERATOR</span>
+            <span v-if="creatorId == user.uid">CREATOR</span>
+          </div>
+        </v-card-title>
         <v-card-subtitle>
           <div>
-            {{ date }} <b> . </b> {{ admins.length }} admins <b> . </b>
-            {{ moderators.length }} moderators <b> . </b>
-            {{ accepted.length }} students
-            <span v-if="creatorId == user.uid">
-              <b> . </b> {{ pending.length }} pending
-            </span>
+            <v-chip
+              title="Class admins"
+              class="mr-1"
+              color="#3e4444"
+              label
+              text-color="white"
+              small
+            >
+              <v-icon left size="16"> mdi-account-cog </v-icon>
+              {{ admins.length }}
+            </v-chip>
+            <v-chip
+              title="Class moderators"
+              class="mr-1"
+              color="#feb236"
+              label
+              text-color="white"
+              small
+            >
+              <v-icon left size="16"> mdi-account-details </v-icon>
+              {{ moderators.length }}
+            </v-chip>
+            <v-chip
+              title="Accepted students"
+              class="mr-1"
+              color="#4040a1"
+              label
+              text-color="white"
+              small
+            >
+              <v-icon left size="16"> mdi-account-check </v-icon>
+              {{ accepted.length }}
+            </v-chip>
+            <v-chip
+              v-if="creatorId == user.uid && pending.length"
+              title="Pending students"
+              class="mr-1"
+              color="#f7786b"
+              label
+              text-color="white"
+              small
+            >
+              <v-icon left size="16"> mdi-account-clock </v-icon>
+              {{ pending.length }}
+            </v-chip>
           </div>
-          <div v-if="pending.includes(user.uid)"><b>STATUS: </b> PENDING</div>
-          <div v-if="accepted.includes(user.uid)"><b>STATUS: </b> ACCEPTED</div>
-          <div v-if="admins.includes(user.uid)"><b>STATUS: </b> ADMIN</div>
-          <div v-if="moderators.includes(user.uid)">
-            <b>STATUS: </b> MODERATOR
-          </div>
-          <div v-if="creatorId == user.uid"><b>STATUS: </b> CREATOR</div>
+          <div>{{ date }}</div>
         </v-card-subtitle>
         <v-card-text>
           {{ description }}
@@ -117,36 +159,30 @@ export default {
     EditClass,
     ClassMembers,
   },
-  // middleware: ['auth-only'],
   async asyncData({ $fire, route }) {
-    if (process.server) {
-      let data = {
-        error: '',
-        title: '',
-        description: '',
-      }
-      try {
-        const code = route.params.code
-        await $fire.firestoreReady()
-        const db = $fire.firestore
-        const docRef = db.collection('classes').doc(code)
-        return await docRef.get().then((doc) => {
-          if (doc.exists) {
-            const docData = doc.data()
-            data = { ...docData, error: data.error }
-          } else {
-            data.error = 'Class not found'
-          }
-          return { ...data }
-        })
-      } catch {
-        data.error = 'Failed to retrieve data'
-      }
-
-      return { ...data }
-    } else if (process.client) {
-      return { loading: true }
+    let data = {
+      error: '',
+      title: '',
+      description: '',
     }
+    try {
+      const code = route.params.code
+      await $fire.firestoreReady()
+      const db = $fire.firestore
+      const docRef = db.collection('classes').doc(code)
+      return await docRef.get().then((doc) => {
+        if (doc.exists) {
+          const docData = doc.data()
+          data = { ...docData, error: data.error }
+        } else {
+          data.error = 'Class not found'
+        }
+        return { ...data }
+      })
+    } catch {
+      data.error = 'Failed to retrieve data'
+    }
+    return { ...data }
   },
   data: () => ({
     snackbar: {
@@ -180,36 +216,6 @@ export default {
     ...mapState(['loaded', 'user', 'userdataLoaded']),
   },
   async created() {
-    if (process.client) {
-      let data = {
-        error: '',
-        title: '',
-        description: '',
-        code: '',
-      }
-      try {
-        const code = this.route.params.code
-        await this.$fire.firestoreReady()
-        const db = this.$fire.firestore
-        const docRef = db.collection('classes').doc(code)
-        return await docRef.get().then((doc) => {
-          if (doc.exists) {
-            const docData = doc.data()
-            data = { ...docData, error: data.error }
-          } else {
-            data.error = 'Class not found'
-          }
-          return { ...data }
-        })
-      } catch {
-        data.error = 'Failed to retrieve data'
-      }
-
-      this.error = data.error
-      this.title = data.title
-      this.description = data.description
-      this.code = data.code
-    }
     if (!this.error) {
       await this.$fire.firestoreReady()
       this.admins = await this.getMembers('admins')
