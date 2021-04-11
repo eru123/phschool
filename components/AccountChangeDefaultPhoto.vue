@@ -185,7 +185,7 @@ export default {
         authorId: this.user?.uid,
         author: this.userdata?.name,
       }
-      const refId = `profile/${uuid()}`
+      const refId = `users/${this.user.uid}/${uuid()}`
       await this.$fire.storageReady()
       const storageRef = this.$fire.storage
         .ref(refId)

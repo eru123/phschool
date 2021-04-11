@@ -44,7 +44,7 @@
     </v-app-bar>
     <v-main>
       <v-container>
-        <Nuxt />
+        <Nuxt :key="$route.fullRoute" />
       </v-container>
     </v-main>
     <v-navigation-drawer
@@ -103,8 +103,6 @@ export default {
   async created() {
     await this.$fire.authReady()
     this.$store.commit('loaded', false)
-
-    console.log(this.$fire.auth.currentUser)
 
     this.$fire.auth.onAuthStateChanged(async (user) => {
       if (user) {
